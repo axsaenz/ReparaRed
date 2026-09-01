@@ -1,0 +1,26 @@
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Environment, LogLevel, NodeEnvironment } from './env.schema';
+
+@Injectable()
+export class AppConfigService {
+  constructor(private readonly config: ConfigService<Environment, true>) {}
+
+  get nodeEnv(): NodeEnvironment {
+    return this.config.get<string>('NODE_ENV', {
+      infer: true,
+    }) as NodeEnvironment;
+  }
+
+  get port(): number {
+    return this.config.get<number>('PORT', { infer: true });
+  }
+
+  get host(): string {
+    return this.config.get<string>('HOST', { infer: true });
+  }
+
+  get logLevel(): LogLevel {
+    return this.config.get<string>('LOG_LEVEL', { infer: true }) as LogLevel;
+  }
+}

@@ -1,17 +1,23 @@
 import 'reflect-metadata';
-import { NestFactory } from '@nestjs/core';
-import {
-  FastifyAdapter,
-  NestFastifyApplication,
-} from '@nestjs/platform-fastify';
-import { AppModule } from './app.module';
+import { NestFastifyApplication } from '@nestjs/platform-fastify';
+import { AppConfigService } from './config/app-config.service';
+import { createApp } from './app.factory';
 
-async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter(),
-  );
-  await app.listen(3000, '0.0.0.0');
+export async function bootstrap(): Promise<NestFastifyApplication> {
+  const app = await createApp();
+  const config = app.get(AppConfigService);
+
+  await app.listen(config.port, config.host);
+  return app;
 }
 
-bootstrap();
+function reportStartupFailure(): void {
+  process.exitCode = 1;
+  console.error(
+    'API startup aborted before listening. Check NODE_ENV, PORT, HOST, and LOG_LEVEL.',
+  );
+}
+
+if (require.main === module) {
+  void bootstrap().catch(() => reportStartupFailure());
+}
