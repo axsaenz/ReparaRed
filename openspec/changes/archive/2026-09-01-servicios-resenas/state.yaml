@@ -27,15 +27,18 @@ phases:
     status: done
     artifact: openspec/changes/servicios-resenas/tasks.md
   apply:
-    status: in-progress
+    status: done
+    progress: '11/11 tasks; commit 379d6de; 376 implementation lines (size:exception approved); P1012 blocked attempt resolved via design amendment (composite unique), clean retry'
+    artifact: openspec/changes/servicios-resenas/apply-progress.md
     delivery_resolution: 'orchestrator-resolved (auto mode mandate 2026-09-01): size:exception APPROVED — single cohesive unit; no git remote for chains; 340-430 authored lines (schema + migration #5 + trigger + mandated static contracts); implement honestly, no compression'
   verify:
-    status: pending
+    status: done
+    artifact: openspec/changes/servicios-resenas/verify-report.md
   archive:
-    status: pending
+    status: done
 session:
   execution_mode: auto
   delivery_strategy: ask-on-risk
   review_budget_lines: 400
   note: "auto mode per user mandate 2026-09-01; orchestrator picks recommended options; blockers surfaced at the end"
-next_recommended: sdd-explore
+next_recommended: "backlog item #10 (automate OpenAPI contract) — start new SDD cycle; REMINDERS: (a) live PostgreSQL gate UNSATISFIED for migrations #1–#5 + seed + trigger/concurrency behavior; (b) service transitions/cancellation authorization/review eligibility API-owned under ADR-0015 (#31/#34–#38)"
