@@ -1,0 +1,39 @@
+change: inicializar-monorepo
+display_name: "Implement BACKLOG.md item #1: Inicializar el monorepo"
+artifact_store: openspec
+created: "2026-09-01"
+phases:
+  explore:
+    status: done
+    artifact: openspec/changes/inicializar-monorepo/exploration.md
+  research:
+    status: unselected
+  pre-proposal:
+    status: confirmed
+    artifact: openspec/changes/inicializar-monorepo/pre-proposal.md
+  propose:
+    status: done
+    artifact: openspec/changes/inicializar-monorepo/proposal.md
+  spec:
+    status: done
+    artifact: openspec/changes/inicializar-monorepo/specs/monorepo-workspace/spec.md
+  design:
+    status: done
+    artifact: openspec/changes/inicializar-monorepo/design.md
+  tasks:
+    status: done
+    artifact: openspec/changes/inicializar-monorepo/tasks.md
+  apply:
+    status: done
+    progress: "28/28 tasks; commit 30890dd on main"
+    artifact: openspec/changes/inicializar-monorepo/apply-progress.md
+  verify:
+    status: pending
+  archive:
+    status: pending
+session:
+  execution_mode: auto
+  delivery_strategy: ask-on-risk
+  review_budget_lines: 400
+  note: "2026-09-01 switched interactive->auto by user request; orchestrator picks recommended options; user input only surfaced at the end"
+next_recommended: "sdd-verify (independent), then sdd-archive, then backlog item #2"
