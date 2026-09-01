@@ -11,9 +11,23 @@
   },
   "packageManager": "npm@12.0.1",
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspace=@repara/web --workspace=@repara/api",
+    "lint:web": "eslint --config eslint.config.mjs apps/web packages/config",
+    "lint:api": "eslint --config eslint.config.mjs apps/api",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "typecheck": "npm run typecheck --workspace=@repara/web --workspace=@repara/api",
+    "test": "npm run test --workspace=@repara/web --workspace=@repara/api",
+    "build": "npm run build --workspace=@repara/web --workspace=@repara/api",
     "build:web": "npm run build --workspace=@repara/web",
     "build:api": "npm run build --workspace=@repara/api",
     "ci:check": "npm ci"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.4",
+    "prettier": "^3.9.6",
+    "typescript-eslint": "^8.69.0",
+    "vitest": "^4.1.11"
   }
 }

@@ -4,6 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "lint": "npm --prefix ../.. run lint:web",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
     "build": "next build",
     "start": "next start"
   },

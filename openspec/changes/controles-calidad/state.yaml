@@ -1,0 +1,40 @@
+change: controles-calidad
+display_name: 'Implement BACKLOG.md item #2: Quality controls (lint/format/types/tests/CI)'
+artifact_store: openspec
+created: '2026-09-01'
+depends_on:
+  - inicializar-monorepo (archived 2026-09-01; capability monorepo-workspace in openspec/specs/)
+phases:
+  explore:
+    status: done
+    artifact: openspec/changes/controles-calidad/exploration.md
+  research:
+    status: unselected
+  pre-proposal:
+    status: confirmed
+    artifact: openspec/changes/controles-calidad/pre-proposal.md
+  propose:
+    status: done
+    artifact: openspec/changes/controles-calidad/proposal.md
+  spec:
+    status: done
+    artifact: openspec/changes/controles-calidad/specs/monorepo-workspace/spec.md
+  design:
+    status: done
+    artifact: openspec/changes/controles-calidad/design.md
+  tasks:
+    status: done
+    artifact: openspec/changes/controles-calidad/tasks.md
+  apply:
+    status: in-progress
+    delivery_resolution: 'orchestrator-resolved (auto mode mandate 2026-09-01): single commit, proceed; no chaining; no size:exception (forecast Low, ~220-320 authored lines)'
+  verify:
+    status: pending
+  archive:
+    status: pending
+session:
+  execution_mode: auto
+  delivery_strategy: ask-on-risk
+  review_budget_lines: 400
+  note: 'auto mode per user mandate 2026-09-01; orchestrator picks recommended options; blockers surfaced at the end'
+next_recommended: sdd-explore

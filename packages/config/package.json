@@ -5,10 +5,14 @@
   "description": "Shared configuration bases for the ReparaRed monorepo",
   "main": "tsconfig.base.json",
   "files": [
-    "tsconfig.base.json"
+    "tsconfig.base.json",
+    "eslint.mjs",
+    "prettier.mjs"
   ],
   "exports": {
     "./package.json": "./package.json",
-    "./tsconfig.base.json": "./tsconfig.base.json"
+    "./tsconfig.base.json": "./tsconfig.base.json",
+    "./eslint": "./eslint.mjs",
+    "./prettier": "./prettier.mjs"
   }
 }
