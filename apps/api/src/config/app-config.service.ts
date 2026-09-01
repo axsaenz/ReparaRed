@@ -23,4 +23,8 @@ export class AppConfigService {
   get logLevel(): LogLevel {
     return this.config.get<string>('LOG_LEVEL', { infer: true }) as LogLevel;
   }
+
+  get databaseUrl(): string | undefined {
+    return this.config.get<string>('DATABASE_URL', { infer: true });
+  }
 }

@@ -19,6 +19,31 @@ describe('environment schema', () => {
     expect(result.PLATFORM_RELEASE).toBe('safe-label');
   });
 
+  it.each([
+    'postgres://user:pass@localhost:5432/reparared',
+    'postgresql://user:pass@localhost:5432/reparared?sslmode=require',
+  ])('accepts PostgreSQL URL %s', (databaseUrl) => {
+    const result = validateEnvironment({ DATABASE_URL: databaseUrl });
+
+    expect(result.DATABASE_URL).toBe(databaseUrl);
+  });
+
+  it.each(['mysql://user:pass@localhost:3306/reparared', 'not-a-database-url'])(
+    'rejects non-PostgreSQL URL %s without exposing its value',
+    (databaseUrl) => {
+      const { error } = envSchema.validate({ DATABASE_URL: databaseUrl });
+
+      expect(error?.message).toContain('DATABASE_URL');
+      expect(error?.message).not.toContain(databaseUrl);
+    },
+  );
+
+  it('allows DATABASE_URL to be absent for offline boot', () => {
+    const result = validateEnvironment({});
+
+    expect(result.DATABASE_URL).toBeUndefined();
+  });
+
   it.each(['0', '65536', 'not-a-port'])(
     'rejects invalid PORT %s safely',
     (port) => {

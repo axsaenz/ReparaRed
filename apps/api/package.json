@@ -7,7 +7,11 @@
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
     "build": "tsc -p tsconfig.json",
-    "start": "node dist/main.js"
+    "start": "node dist/main.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate:deploy": "prisma migrate deploy",
+    "prisma:migrate:status": "prisma migrate status",
+    "prebuild": "prisma generate"
   },
   "dependencies": {
     "@nestjs/common": "^12.0.1",
@@ -15,6 +19,7 @@
     "@nestjs/platform-fastify": "^12.0.1",
     "@nestjs/config": "^12.0.0",
     "@nestjs/terminus": "^12.0.0",
+    "@prisma/client": "6.19.3",
     "fastify": "^5",
     "joi": "^18.2.5",
     "pino": "^10.3.1",
@@ -26,6 +31,7 @@
   "devDependencies": {
     "@repara/config": "^1.0.0",
     "@types/node": "^24",
+    "prisma": "6.19.3",
     "typescript": "^5"
   }
 }

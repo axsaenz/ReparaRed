@@ -1,0 +1,45 @@
+change: prisma-postgresql
+display_name: "Implement BACKLOG.md item #4: Prisma + PostgreSQL (runtime/migration connections, reproducible initial migration)"
+artifact_store: openspec
+created: "2026-09-01"
+depends_on:
+  - inicializar-monorepo (archived 2026-09-01)
+  - controles-calidad (archived 2026-09-01)
+  - note: "item #4 depends ONLY on #1+#2 per BACKLOG; base-operativa-api (#3) is archived anyway and its api-foundation capability may be extended but is not a prerequisite"
+phases:
+  explore:
+    status: done
+    artifact: openspec/changes/prisma-postgresql/exploration.md
+  research:
+    status: unselected
+  pre-proposal:
+    status: confirmed
+    artifact: openspec/changes/prisma-postgresql/pre-proposal.md
+  propose:
+    status: done
+    artifact: openspec/changes/prisma-postgresql/proposal.md
+  spec:
+    status: done
+    artifact: openspec/changes/prisma-postgresql/specs/api-foundation/spec.md
+  design:
+    status: done
+    artifact: openspec/changes/prisma-postgresql/design.md
+  tasks:
+    status: done
+    artifact: openspec/changes/prisma-postgresql/tasks.md
+  apply:
+    status: done
+    progress: '21/21 tasks; commit cefc1b6; 362 authored lines (within budget)'
+    artifact: openspec/changes/prisma-postgresql/apply-progress.md
+    delivery_resolution: 'orchestrator-resolved (auto mode mandate 2026-09-01): single commit, proceed; risk Medium but estimate 360-395 authored lines stays within 400 budget; no chaining (no git remote; cohesive unit); no size:exception'
+    accepted_risk: 'npm audit 3 high in prisma CLI dev chain (deepmerge-ts stack exhaustion, dev-only CLI path, no runtime exposure; fix requires downgrade to prisma 6.12.0 — rejected; revisit on Prisma 7 upgrade or item #11)'
+  verify:
+    status: in-progress
+  archive:
+    status: pending
+session:
+  execution_mode: auto
+  delivery_strategy: ask-on-risk
+  review_budget_lines: 400
+  note: "auto mode per user mandate 2026-09-01; orchestrator picks recommended options; blockers surfaced at the end"
+next_recommended: sdd-explore

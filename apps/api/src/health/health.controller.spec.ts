@@ -3,6 +3,7 @@ import { HealthCheckService } from '@nestjs/terminus';
 import { describe, expect, it, vi } from 'vitest';
 import { FoundationIndicator } from './foundation.indicator';
 import { HealthController } from './health.controller';
+import { PrismaHealthIndicator } from '../database/prisma-health.indicator';
 
 describe('HealthController', () => {
   it('checks no dependencies for liveness and returns minimal JSON', async () => {
@@ -33,6 +34,28 @@ describe('HealthController', () => {
     const indicators = check.mock.calls[0][0] as Array<() => unknown>;
     expect(indicators).toHaveLength(1);
     expect(indicators[0]()).toEqual({ 'app-foundation': { status: 'up' } });
+  });
+
+  it('adds the configured database indicator at extension point #4', async () => {
+    const check = vi.fn().mockResolvedValue({ status: 'ok', details: {} });
+    const foundation = {} as FoundationIndicator;
+    const database = {
+      isHealthy: vi.fn().mockResolvedValue({ database: { status: 'up' } }),
+    } as unknown as PrismaHealthIndicator;
+    const controller = new HealthController(
+      { check } as unknown as HealthCheckService,
+      foundation,
+      database,
+    );
+
+    await expect(controller.ready()).resolves.toEqual({ status: 'ok' });
+
+    const indicators = check.mock.calls[0][0] as Array<() => unknown>;
+    expect(indicators).toHaveLength(2);
+    await expect(indicators[1]()).resolves.toEqual({
+      database: { status: 'up' },
+    });
+    expect(database.isHealthy).toHaveBeenCalledWith('database');
   });
 
   it('turns a Terminus failure into a safe 503 exception', async () => {

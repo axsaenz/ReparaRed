@@ -18,6 +18,7 @@ export interface Environment {
   PORT: number;
   HOST: string;
   LOG_LEVEL: LogLevel;
+  DATABASE_URL?: string;
 }
 
 export const envSchema = Joi.object<Environment>({
@@ -29,6 +30,9 @@ export const envSchema = Joi.object<Environment>({
   LOG_LEVEL: Joi.string()
     .valid(...LOG_LEVEL_VALUES)
     .default('info'),
+  DATABASE_URL: Joi.string().uri({
+    scheme: ['postgres', 'postgresql'],
+  }),
 }).unknown(true);
 
 export function validateEnvironment(
