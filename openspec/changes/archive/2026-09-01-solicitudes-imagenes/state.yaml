@@ -28,15 +28,18 @@ phases:
     status: done
     artifact: openspec/changes/solicitudes-imagenes/tasks.md
   apply:
-    status: in-progress
+    status: done
+    progress: '13/13 tasks; commit 40f0dd6; 455 implementation lines + records (size:exception approved)'
+    artifact: openspec/changes/solicitudes-imagenes/apply-progress.md
     delivery_resolution: 'orchestrator-resolved (auto mode mandate 2026-09-01): size:exception APPROVED — single cohesive unit; no git remote for chains; 420-520 authored lines driven by normative schema + migration #3 + mandated static contracts; implement honestly, no compression'
   verify:
-    status: pending
+    status: done
+    artifact: openspec/changes/solicitudes-imagenes/verify-report.md
   archive:
-    status: pending
+    status: done
 session:
   execution_mode: auto
   delivery_strategy: ask-on-risk
   review_budget_lines: 400
   note: "auto mode per user mandate 2026-09-01; orchestrator picks recommended options; blockers surfaced at the end"
-next_recommended: sdd-explore
+next_recommended: "backlog item #8 (persist quotes) — start new SDD cycle; REMINDERS: (a) live PostgreSQL gate UNSATISFIED for migrations #1–#3 + seed execution; (b) request transition matrix + 3-image capacity counting are API-owned under ADR-0015 in items #17/#19/#22 — not DB-enforced by design"
