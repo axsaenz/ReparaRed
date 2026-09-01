@@ -28,15 +28,18 @@ phases:
     status: done
     artifact: openspec/changes/cotizaciones/tasks.md
   apply:
-    status: in-progress
+    status: done
+    progress: '14/14 tasks; commit f35ba61; 245 implementation lines (within budget)'
+    artifact: openspec/changes/cotizaciones/apply-progress.md
     delivery_resolution: 'orchestrator-resolved (auto mode mandate 2026-09-01): single commit, proceed; risk Medium, estimate 250-320 authored lines within 400 budget; no chaining'
   verify:
-    status: pending
+    status: done
+    artifact: openspec/changes/cotizaciones/verify-report.md
   archive:
-    status: pending
+    status: done
 session:
   execution_mode: auto
   delivery_strategy: ask-on-risk
   review_budget_lines: 400
   note: "auto mode per user mandate 2026-09-01; orchestrator picks recommended options; blockers surfaced at the end"
-next_recommended: sdd-explore
+next_recommended: "backlog item #9 (persist services and reviews) — start new SDD cycle; REMINDERS: (a) live PostgreSQL gate UNSATISFIED for migrations #1–#4 + seed execution + concurrency proof; (b) quote transitions + availability revalidation API-owned under ADR-0015 (#23/#28/#31)"
