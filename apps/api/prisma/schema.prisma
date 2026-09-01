@@ -25,6 +25,13 @@ enum UploadReservationStatus {
   CONFIRMED
 }
 
+enum QuoteStatus {
+  SUBMITTED
+  WITHDRAWN
+  SELECTED
+  CLOSED
+}
+
 model User {
   id               String            @id(map: "users_pkey") @default(uuid()) @db.Uuid
   authSubject      String            @unique(map: "users_auth_subject_key") @map("auth_subject")
@@ -63,6 +70,7 @@ model TechnicianProfile {
   updatedAt       DateTime             @updatedAt @map("updated_at") @db.Timestamptz(6)
   user            User                 @relation(fields: [userId], references: [id], onDelete: Restrict, map: "technician_profiles_user_id_fkey")
   specialties     TechnicianSpecialty[]
+  quotes          Quote[]
 
   @@map("technician_profiles")
 }
@@ -124,6 +132,7 @@ model Request {
   cancelledBy        User?                    @relation("RequestCancellationActor", fields: [cancelledByUserId], references: [id], onDelete: Restrict, map: "requests_cancelled_by_user_id_fkey")
   uploadReservations UploadReservation[]
   images             RequestImage[]
+  quotes             Quote[]
 
   @@index([status(sort: Asc), categoryId(sort: Asc), publishedAt(sort: Desc), id(sort: Asc)], map: "idx_requests_status_category_published")
   @@index([clientId(sort: Asc), publishedAt(sort: Desc), id(sort: Asc)], map: "idx_requests_client_published")
@@ -158,4 +167,24 @@ model RequestImage {
 
   @@unique([requestId, position], map: "request_images_request_id_position_key")
   @@map("request_images")
+}
+
+model Quote {
+  id           String            @id(map: "quotes_pkey") @default(uuid()) @db.Uuid
+  requestId    String            @db.Uuid @map("request_id")
+  technicianId String            @db.Uuid @map("technician_id")
+  amount       Decimal           @db.Decimal(8, 2)
+  currency     String            @db.VarChar(3)
+  description  String            @db.VarChar(1000)
+  availableAt  DateTime          @map("available_at") @db.Timestamptz(6)
+  status       QuoteStatus       @default(SUBMITTED)
+  createdAt    DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime          @updatedAt @map("updated_at") @db.Timestamptz(6)
+  request      Request           @relation(fields: [requestId], references: [id], onDelete: Restrict, map: "quotes_request_id_fkey")
+  technician   TechnicianProfile @relation(fields: [technicianId], references: [userId], onDelete: Restrict, map: "quotes_technician_id_fkey")
+
+  @@unique([requestId, technicianId], map: "quotes_request_id_technician_id_key")
+  @@index([technicianId, createdAt(sort: Desc), id], map: "idx_quotes_technician_created")
+  @@index([requestId, createdAt(sort: Desc), id], map: "idx_quotes_request_created")
+  @@map("quotes")
 }

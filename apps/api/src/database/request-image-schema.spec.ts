@@ -31,7 +31,7 @@ describe('STATIC: request and image schema contract', () => {
       expect(schema).toMatch(new RegExp(`\\bmodel\\s+${name}\\s*\\{`));
     }
 
-    expect(schema.match(/\bmodel\s+\w+\s*\{/g)).toHaveLength(9);
+    expect(schema.match(/\bmodel\s+\w+\s*\{/g)).toHaveLength(10);
     expect(schema).toContain(
       '// Recorded implementation choice: sources require a status but do not enumerate it.',
     );
