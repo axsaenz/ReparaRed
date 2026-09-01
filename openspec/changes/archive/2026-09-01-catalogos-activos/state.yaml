@@ -30,15 +30,18 @@ phases:
     status: done
     artifact: openspec/changes/catalogos-activos/tasks.md
   apply:
-    status: in-progress
+    status: done
+    progress: '17/17 tasks; commit 3b56623; ~1404 implementation/test lines + artifacts (size:exception approved)'
+    artifact: openspec/changes/catalogos-activos/apply-progress.md
     delivery_resolution: 'orchestrator-resolved (auto mode mandate 2026-09-01): size:exception APPROVED — single cohesive unit; no git remote to host chained PRs; ~550-650 authored lines driven by the domain dataset (50 districts) + mandated contract tests; implement honestly, no compression'
   verify:
-    status: pending
+    status: done
+    artifact: openspec/changes/catalogos-activos/verify-report.md
   archive:
-    status: pending
+    status: done
 session:
   execution_mode: auto
   delivery_strategy: ask-on-risk
   review_budget_lines: 400
   note: "auto mode per user mandate 2026-09-01; orchestrator picks recommended options; blockers surfaced at the end"
-next_recommended: sdd-explore
+next_recommended: "backlog item #7 (persist requests and images) — start new SDD cycle; REMINDERS: (a) live PostgreSQL gate remains UNSATISFIED for migrations #1–#2 AND seed execution (row counts + idempotent re-seed) — close when disposable PostgreSQL exists or at item #11; (b) UBIGEO dataset is best-effort pending official extract — corrections arrive via re-seed upserts, no schema change"
