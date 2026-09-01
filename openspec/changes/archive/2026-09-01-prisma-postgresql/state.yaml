@@ -34,12 +34,14 @@ phases:
     delivery_resolution: 'orchestrator-resolved (auto mode mandate 2026-09-01): single commit, proceed; risk Medium but estimate 360-395 authored lines stays within 400 budget; no chaining (no git remote; cohesive unit); no size:exception'
     accepted_risk: 'npm audit 3 high in prisma CLI dev chain (deepmerge-ts stack exhaustion, dev-only CLI path, no runtime exposure; fix requires downgrade to prisma 6.12.0 — rejected; revisit on Prisma 7 upgrade or item #11)'
   verify:
-    status: in-progress
+    status: done
+    artifact: openspec/changes/prisma-postgresql/verify-report.md
+    note: 'PASS after hygiene remediation (SCOPE-URL-LITERAL-001 + WORKTREE-CLEAN-001 fixed); 11/12 scenarios verified offline; live migration gate RECORDED PENDING (unsatisfied until disposable PostgreSQL exists); accepted risk: 3 high audit findings in prisma CLI dev chain'
   archive:
-    status: pending
+    status: done
 session:
   execution_mode: auto
   delivery_strategy: ask-on-risk
   review_budget_lines: 400
   note: "auto mode per user mandate 2026-09-01; orchestrator picks recommended options; blockers surfaced at the end"
-next_recommended: sdd-explore
+next_recommended: "backlog item #5 (identity and profiles) — start new SDD cycle; REMINDER: item #4 live migration gate (apply→re-apply→status on disposable PostgreSQL) remains UNSATISFIED — close it when a disposable PostgreSQL exists or at item #11"
