@@ -26,15 +26,18 @@ phases:
     status: done
     artifact: openspec/changes/identidad-perfiles/tasks.md
   apply:
-    status: in-progress
+    status: done
+    progress: '11/11 tasks; commit 213a1b2; 1268 authored lines incl. change artifacts (size:exception reported)'
+    artifact: openspec/changes/identidad-perfiles/apply-progress.md
     delivery_resolution: 'orchestrator-resolved (auto mode mandate 2026-09-01): single cohesive unit, proceed; no chaining (no git remote); estimate 380-450 — if final authored count exceeds 400, report size:exception honestly without compressing content'
   verify:
-    status: pending
+    status: done
+    artifact: openspec/changes/identidad-perfiles/verify-report.md
   archive:
-    status: pending
+    status: done
 session:
   execution_mode: auto
   delivery_strategy: ask-on-risk
   review_budget_lines: 400
   note: "auto mode per user mandate 2026-09-01; orchestrator picks recommended options; blockers surfaced at the end"
-next_recommended: sdd-explore
+next_recommended: "backlog item #6 (active catalogs) — start new SDD cycle; REMINDERS: (a) item #6 MUST follow migration #2 (catalog skeletons exist, zero rows); (b) live PostgreSQL gate (apply→re-apply→status) remains UNSATISFIED for migrations #1+#2 incl. hand-written triggers/checks — close when disposable PostgreSQL exists or at item #11"

@@ -113,7 +113,17 @@ Exactly one data client instance MUST exist per process. Connection MUST be defe
 - THEN it reports readiness down and keeps the process alive without details
 
 ### Requirement: Reproducible migration baseline
-The repository MUST contain one committed, versioned initial PostgreSQL migration baseline and provider lock. It MUST contain no domain tables, enums, or extensions; destructive schema auto-sync MUST be prohibited. Verification MUST record live apply → re-apply → status as an unsatisfied pending gate until disposable PostgreSQL exists, and MUST NOT claim live verification before then.
+The repository MUST contain one committed, versioned initial PostgreSQL migration baseline and provider lock; migration #1 (the baseline) MUST contain no domain tables, enums, or extensions; SUBSEQUENT versioned domain migrations are EXPECTED as later capabilities add models; destructive schema auto-sync MUST remain prohibited; the live apply→re-apply→status pending-gate obligation is unchanged.
+
+#### Scenario: Empty baseline
+- GIVEN the provider lock and versioned migration #1 exist
+- WHEN migration #1 is inspected
+- THEN it contains no domain tables, enums, or extensions
+
+#### Scenario: Subsequent domain migration
+- GIVEN a later capability adds domain models
+- WHEN a versioned migration follows the baseline
+- THEN the domain migration is permitted and migration #1 remains empty
 
 #### Scenario: Live gate
 - GIVEN a disposable PostgreSQL instance exists
