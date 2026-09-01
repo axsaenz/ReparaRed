@@ -21,7 +21,7 @@ describe('STATIC: identity schema contract', () => {
       expect(schema).toMatch(new RegExp(`\\bmodel\\s+${model}\\s*\\{`));
     }
 
-    expect(schema.match(/\bmodel\s+\w+\s*\{/g)).toHaveLength(10);
+    expect(schema.match(/\bmodel\s+\w+\s*\{/g)).toHaveLength(12);
     expect(schema).toContain('enum UserRole {');
     expect(schema).toMatch(
       /enum UserRole \{[\s\S]*CLIENT[\s\S]*TECHNICIAN[\s\S]*\}/,

@@ -32,6 +32,14 @@ enum QuoteStatus {
   CLOSED
 }
 
+enum ServiceStatus {
+  SCHEDULED
+  IN_PROGRESS
+  AWAITING_CONFIRMATION
+  COMPLETED
+  CANCELLED
+}
+
 model User {
   id               String            @id(map: "users_pkey") @default(uuid()) @db.Uuid
   authSubject      String            @unique(map: "users_auth_subject_key") @map("auth_subject")
@@ -42,6 +50,8 @@ model User {
   clientProfile    ClientProfile?
   technicianProfile TechnicianProfile?
   cancelledRequests Request[]        @relation("RequestCancellationActor")
+  cancelledServices Service[]         @relation("ServiceCancellationActor")
+  reviews           Review[]
 
   @@map("users")
 }
@@ -133,6 +143,7 @@ model Request {
   uploadReservations UploadReservation[]
   images             RequestImage[]
   quotes             Quote[]
+  service            Service?
 
   @@index([status(sort: Asc), categoryId(sort: Asc), publishedAt(sort: Desc), id(sort: Asc)], map: "idx_requests_status_category_published")
   @@index([clientId(sort: Asc), publishedAt(sort: Desc), id(sort: Asc)], map: "idx_requests_client_published")
@@ -182,9 +193,46 @@ model Quote {
   updatedAt    DateTime          @updatedAt @map("updated_at") @db.Timestamptz(6)
   request      Request           @relation(fields: [requestId], references: [id], onDelete: Restrict, map: "quotes_request_id_fkey")
   technician   TechnicianProfile @relation(fields: [technicianId], references: [userId], onDelete: Restrict, map: "quotes_technician_id_fkey")
+  service      Service?
 
   @@unique([requestId, technicianId], map: "quotes_request_id_technician_id_key")
+  @@unique([id, requestId], map: "quotes_id_request_id_key")
   @@index([technicianId, createdAt(sort: Desc), id], map: "idx_quotes_technician_created")
   @@index([requestId, createdAt(sort: Desc), id], map: "idx_quotes_request_created")
   @@map("quotes")
+}
+
+model Service {
+  id                 String        @id(map: "services_pkey") @default(uuid()) @db.Uuid
+  requestId          String        @unique(map: "services_request_id_key") @db.Uuid @map("request_id")
+  selectedQuoteId    String        @unique(map: "services_selected_quote_id_key") @db.Uuid @map("selected_quote_id")
+  scheduledAt        DateTime      @map("scheduled_at") @db.Timestamptz(6)
+  status             ServiceStatus @default(SCHEDULED)
+  cancelledAt        DateTime?     @map("cancelled_at") @db.Timestamptz(6)
+  cancelledByUserId  String?       @db.Uuid @map("cancelled_by_user_id")
+  cancellationReason String?       @db.VarChar(500) @map("cancellation_reason")
+  createdAt          DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  request            Request       @relation(fields: [requestId], references: [id], onDelete: Restrict, map: "services_request_id_fkey")
+  selectedQuote      Quote         @relation(fields: [selectedQuoteId, requestId], references: [id, requestId], onDelete: Restrict, map: "services_selected_quote_id_request_id_fkey")
+  cancelledBy        User?         @relation("ServiceCancellationActor", fields: [cancelledByUserId], references: [id], onDelete: Restrict, map: "services_cancelled_by_user_id_fkey")
+  review             Review?
+
+  // Structurally implied by services_request_id_key; REQUIRED by Prisma's composite one-to-one validation (P1012).
+  @@unique([selectedQuoteId, requestId], map: "services_selected_quote_id_request_id_key")
+  @@index([status, createdAt(sort: Desc), id], map: "idx_services_status_created")
+  @@map("services")
+}
+
+model Review {
+  id        String   @id(map: "reviews_pkey") @default(uuid()) @db.Uuid
+  serviceId String   @unique(map: "reviews_service_id_key") @db.Uuid @map("service_id")
+  clientId  String   @db.Uuid @map("client_id")
+  rating    Int      @db.Integer
+  comment   String?  @db.VarChar(1000)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  service   Service  @relation(fields: [serviceId], references: [id], onDelete: Restrict, map: "reviews_service_id_fkey")
+  client    User     @relation(fields: [clientId], references: [id], onDelete: Restrict, map: "reviews_client_id_fkey")
+
+  @@map("reviews")
 }

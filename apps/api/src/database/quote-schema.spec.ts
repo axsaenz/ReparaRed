@@ -17,8 +17,8 @@ const model = (name: string) => {
 };
 
 describe('STATIC: quote schema contract', () => {
-  it('STATIC: declares the tenth model and exact quote status enum', () => {
-    expect(schema.match(/\bmodel\s+\w+\s*\{/g)).toHaveLength(10);
+  it('STATIC: declares the twelfth model and exact quote status enum', () => {
+    expect(schema.match(/\bmodel\s+\w+\s*\{/g)).toHaveLength(12);
     expect(schema).toContain('model Quote {');
 
     const statusEnum = schema.match(/enum QuoteStatus\s*\{([\s\S]*?)\n\}/);
