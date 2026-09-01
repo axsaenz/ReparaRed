@@ -27,15 +27,18 @@ phases:
     status: done
     artifact: openspec/changes/base-operativa-api/tasks.md
   apply:
-    status: in-progress
-    delivery_resolution: 'orchestrator-resolved (auto mode mandate 2026-09-01): size:exception — single cohesive unit; no git remote exists to host chained PRs (deploy infra is backlog item #11); intermediate slices would be non-working (filter depends on correlation, health failures route through filter); budget overrun (~460-540) driven by mandatory tests per item #2 spec; backlog convention = one commit per item'
+    status: done
+    progress: '16/16 tasks; commit b8534f5; ~1605 authored lines (size:exception)'
+    artifact: openspec/changes/base-operativa-api/apply-progress.md
+    delivery_resolution: 'orchestrator-resolved (auto mode mandate 2026-09-01): size:exception — single cohesive unit; no git remote exists to host chained PRs (deploy infra is backlog item #11); intermediate slices would be non-working (filter depends on correlation, health failures route through filter); budget overrun driven by mandatory tests per item #2 spec; backlog convention = one commit per item'
   verify:
-    status: pending
+    status: done
+    artifact: openspec/changes/base-operativa-api/verify-report.md
   archive:
-    status: pending
+    status: done
 session:
   execution_mode: auto
   delivery_strategy: ask-on-risk
   review_budget_lines: 400
   note: "auto mode per user mandate 2026-09-01; orchestrator picks recommended options; blockers surfaced at the end"
-next_recommended: sdd-explore
+next_recommended: "backlog item #4 (Prisma + PostgreSQL) — start new SDD cycle"
