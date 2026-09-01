@@ -1,0 +1,40 @@
+change: identidad-perfiles
+display_name: "Implement BACKLOG.md item #5: Persist identity and profiles (users, immutable roles, client/technician profiles, specialties with constraints)"
+artifact_store: openspec
+created: "2026-09-01"
+depends_on:
+  - prisma-postgresql (archived 2026-09-01; live migration gate remains UNSATISFIED — offline-only verification pattern carries forward)
+phases:
+  explore:
+    status: done
+    artifact: openspec/changes/identidad-perfiles/exploration.md
+  research:
+    status: unselected
+  pre-proposal:
+    status: confirmed
+    artifact: openspec/changes/identidad-perfiles/pre-proposal.md
+  propose:
+    status: done
+    artifact: openspec/changes/identidad-perfiles/proposal.md
+  spec:
+    status: done
+    artifact: openspec/changes/identidad-perfiles/specs/identity-persistence/spec.md + specs/api-foundation/spec.md
+  design:
+    status: done
+    artifact: openspec/changes/identidad-perfiles/design.md
+  tasks:
+    status: done
+    artifact: openspec/changes/identidad-perfiles/tasks.md
+  apply:
+    status: in-progress
+    delivery_resolution: 'orchestrator-resolved (auto mode mandate 2026-09-01): single cohesive unit, proceed; no chaining (no git remote); estimate 380-450 — if final authored count exceeds 400, report size:exception honestly without compressing content'
+  verify:
+    status: pending
+  archive:
+    status: pending
+session:
+  execution_mode: auto
+  delivery_strategy: ask-on-risk
+  review_budget_lines: 400
+  note: "auto mode per user mandate 2026-09-01; orchestrator picks recommended options; blockers surfaced at the end"
+next_recommended: sdd-explore

@@ -6,3 +6,82 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+enum UserRole {
+  CLIENT
+  TECHNICIAN
+}
+
+model User {
+  id               String            @id(map: "users_pkey") @default(uuid()) @db.Uuid
+  authSubject      String            @unique(map: "users_auth_subject_key") @map("auth_subject")
+  email            String            @unique(map: "users_email_key")
+  role             UserRole
+  createdAt        DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime          @updatedAt @map("updated_at") @db.Timestamptz(6)
+  clientProfile    ClientProfile?
+  technicianProfile TechnicianProfile?
+
+  @@map("users")
+}
+
+model ClientProfile {
+  userId     String   @id(map: "client_profiles_pkey") @db.Uuid @map("user_id")
+  name       String   @db.VarChar(100)
+  phone      String   @db.VarChar(16)
+  districtId String   @db.Uuid @map("district_id")
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Restrict, map: "client_profiles_user_id_fkey")
+  district   District @relation(fields: [districtId], references: [id], onDelete: Restrict, map: "client_profiles_district_id_fkey")
+
+  @@map("client_profiles")
+}
+
+model TechnicianProfile {
+  userId          String               @id(map: "technician_profiles_pkey") @db.Uuid @map("user_id")
+  professionalName String              @db.VarChar(100) @map("professional_name")
+  description     String               @db.VarChar(1000)
+  phone           String               @db.VarChar(16)
+  yearsExperience Int                  @db.SmallInt @map("years_experience")
+  createdAt       DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime             @updatedAt @map("updated_at") @db.Timestamptz(6)
+  user            User                 @relation(fields: [userId], references: [id], onDelete: Restrict, map: "technician_profiles_user_id_fkey")
+  specialties     TechnicianSpecialty[]
+
+  @@map("technician_profiles")
+}
+
+model TechnicianSpecialty {
+  technicianId String            @db.Uuid @map("technician_id")
+  categoryId   String            @db.Uuid @map("category_id")
+  createdAt    DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  technician   TechnicianProfile @relation(fields: [technicianId], references: [userId], onDelete: Restrict, map: "technician_specialties_technician_id_fkey")
+  category     Category          @relation(fields: [categoryId], references: [id], onDelete: Restrict, map: "technician_specialties_category_id_fkey")
+
+  @@id([technicianId, categoryId], map: "technician_specialties_pkey")
+  @@index([categoryId, technicianId], map: "idx_specialties_by_category")
+  @@map("technician_specialties")
+}
+
+model Category {
+  id          String               @id(map: "categories_pkey") @default(uuid()) @db.Uuid
+  slug        String               @unique(map: "categories_slug_key")
+  name        String
+  active      Boolean              @default(true)
+  specialties TechnicianSpecialty[]
+
+  @@map("categories")
+}
+
+model District {
+  id            String          @id(map: "districts_pkey") @default(uuid()) @db.Uuid
+  ubigeo         String          @unique(map: "districts_ubigeo_code_key") @map("ubigeo_code") @db.VarChar(6)
+  name           String
+  province       String
+  department     String
+  active         Boolean         @default(true)
+  clientProfiles ClientProfile[]
+
+  @@map("districts")
+}
