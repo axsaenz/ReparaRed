@@ -26,15 +26,18 @@ phases:
     status: done
     artifact: openspec/changes/controles-calidad/tasks.md
   apply:
-    status: in-progress
+    status: done
+    progress: '20/20 tasks; commit c025527'
+    artifact: openspec/changes/controles-calidad/apply-progress.md
     delivery_resolution: 'orchestrator-resolved (auto mode mandate 2026-09-01): single commit, proceed; no chaining; no size:exception (forecast Low, ~220-320 authored lines)'
   verify:
-    status: pending
+    status: done
+    artifact: openspec/changes/controles-calidad/verify-report.md
   archive:
-    status: pending
+    status: done
 session:
   execution_mode: auto
   delivery_strategy: ask-on-risk
   review_budget_lines: 400
   note: 'auto mode per user mandate 2026-09-01; orchestrator picks recommended options; blockers surfaced at the end'
-next_recommended: sdd-explore
+next_recommended: "backlog item #3 (NestJS/Fastify API foundation) — start new SDD cycle"
