@@ -28,12 +28,12 @@ phases:
     progress: "28/28 tasks; commit 30890dd on main"
     artifact: openspec/changes/inicializar-monorepo/apply-progress.md
   verify:
-    status: pending
+    status: done
   archive:
-    status: pending
+    status: done
 session:
   execution_mode: auto
   delivery_strategy: ask-on-risk
   review_budget_lines: 400
   note: "2026-09-01 switched interactive->auto by user request; orchestrator picks recommended options; user input only surfaced at the end"
-next_recommended: "sdd-verify (independent), then sdd-archive, then backlog item #2"
+next_recommended: "backlog item #2 (quality controls) — start new SDD cycle"
