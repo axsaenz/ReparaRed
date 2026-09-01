@@ -12,6 +12,19 @@ enum UserRole {
   TECHNICIAN
 }
 
+enum RequestStatus {
+  DRAFT
+  PUBLISHED
+  ASSIGNED
+  CANCELLED
+}
+
+// Recorded implementation choice: sources require a status but do not enumerate it.
+enum UploadReservationStatus {
+  RESERVED
+  CONFIRMED
+}
+
 model User {
   id               String            @id(map: "users_pkey") @default(uuid()) @db.Uuid
   authSubject      String            @unique(map: "users_auth_subject_key") @map("auth_subject")
@@ -21,6 +34,7 @@ model User {
   updatedAt        DateTime          @updatedAt @map("updated_at") @db.Timestamptz(6)
   clientProfile    ClientProfile?
   technicianProfile TechnicianProfile?
+  cancelledRequests Request[]        @relation("RequestCancellationActor")
 
   @@map("users")
 }
@@ -34,6 +48,7 @@ model ClientProfile {
   updatedAt  DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
   user       User     @relation(fields: [userId], references: [id], onDelete: Restrict, map: "client_profiles_user_id_fkey")
   district   District @relation(fields: [districtId], references: [id], onDelete: Restrict, map: "client_profiles_district_id_fkey")
+  requests   Request[]
 
   @@map("client_profiles")
 }
@@ -70,6 +85,7 @@ model Category {
   name        String
   active      Boolean              @default(true)
   specialties TechnicianSpecialty[]
+  requests    Request[]
 
   @@map("categories")
 }
@@ -82,6 +98,64 @@ model District {
   department     String
   active         Boolean         @default(true)
   clientProfiles ClientProfile[]
+  requests       Request[]
 
   @@map("districts")
+}
+
+model Request {
+  id                 String                   @id(map: "requests_pkey") @default(uuid()) @db.Uuid
+  clientId           String                   @db.Uuid @map("client_id")
+  categoryId         String                   @db.Uuid @map("category_id")
+  districtId         String                   @db.Uuid @map("district_id")
+  title              String                   @db.VarChar(120)
+  description        String                   @db.VarChar(2000)
+  preferredAt        DateTime                 @map("preferred_at") @db.Timestamptz(6)
+  status             RequestStatus            @default(DRAFT)
+  publishedAt        DateTime?                @map("published_at") @db.Timestamptz(6)
+  cancelledAt        DateTime?                @map("cancelled_at") @db.Timestamptz(6)
+  cancelledByUserId  String?                  @db.Uuid @map("cancelled_by_user_id")
+  cancellationReason String?                  @db.VarChar(500) @map("cancellation_reason")
+  createdAt          DateTime                 @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime                 @updatedAt @map("updated_at") @db.Timestamptz(6)
+  client             ClientProfile            @relation(fields: [clientId], references: [userId], onDelete: Restrict, map: "requests_client_id_fkey")
+  category           Category                 @relation(fields: [categoryId], references: [id], onDelete: Restrict, map: "requests_category_id_fkey")
+  district           District                 @relation(fields: [districtId], references: [id], onDelete: Restrict, map: "requests_district_id_fkey")
+  cancelledBy        User?                    @relation("RequestCancellationActor", fields: [cancelledByUserId], references: [id], onDelete: Restrict, map: "requests_cancelled_by_user_id_fkey")
+  uploadReservations UploadReservation[]
+  images             RequestImage[]
+
+  @@index([status(sort: Asc), categoryId(sort: Asc), publishedAt(sort: Desc), id(sort: Asc)], map: "idx_requests_status_category_published")
+  @@index([clientId(sort: Asc), publishedAt(sort: Desc), id(sort: Asc)], map: "idx_requests_client_published")
+  @@map("requests")
+}
+
+model UploadReservation {
+  id                  String                  @id(map: "upload_reservations_pkey") @default(uuid()) @db.Uuid
+  requestId           String                  @db.Uuid @map("request_id")
+  objectKey           String                  @unique(map: "upload_reservations_object_key_key") @map("object_key")
+  declaredByteSize    Int                     @db.Integer @map("declared_byte_size")
+  declaredContentType String                  @db.VarChar(100) @map("declared_content_type")
+  status              UploadReservationStatus @default(RESERVED)
+  expiresAt           DateTime                @map("expires_at") @db.Timestamptz(6)
+  confirmedAt         DateTime?               @map("confirmed_at") @db.Timestamptz(6)
+  request             Request                 @relation(fields: [requestId], references: [id], onDelete: Restrict, map: "upload_reservations_request_id_fkey")
+
+  @@index([requestId, status], map: "idx_upload_reservations_request_status")
+  @@map("upload_reservations")
+}
+
+model RequestImage {
+  id        String  @id(map: "request_images_pkey") @default(uuid()) @db.Uuid
+  requestId String  @db.Uuid @map("request_id")
+  objectKey String  @unique(map: "request_images_object_key_key") @map("object_key")
+  mimeType  String  @db.VarChar(50) @map("mime_type")
+  byteSize  Int     @db.Integer @map("byte_size")
+  position  Int     @db.Integer
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  request   Request @relation(fields: [requestId], references: [id], onDelete: Restrict, map: "request_images_request_id_fkey")
+
+  @@unique([requestId, position], map: "request_images_request_id_position_key")
+  @@map("request_images")
 }

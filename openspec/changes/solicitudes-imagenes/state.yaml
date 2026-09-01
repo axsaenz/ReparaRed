@@ -1,0 +1,42 @@
+change: solicitudes-imagenes
+display_name: "Implement BACKLOG.md item #7: Persist requests and images (models, upload reservations, states, relations, limits, indexes, metadata)"
+artifact_store: openspec
+created: "2026-09-01"
+depends_on:
+  - prisma-postgresql (archived)
+  - identidad-perfiles (archived; users/profiles FK targets)
+  - catalogos-activos (archived; categories FK targets for request category)
+phases:
+  explore:
+    status: done
+    artifact: openspec/changes/solicitudes-imagenes/exploration.md
+  research:
+    status: unselected
+  pre-proposal:
+    status: confirmed
+    artifact: openspec/changes/solicitudes-imagenes/pre-proposal.md
+  propose:
+    status: done
+    artifact: openspec/changes/solicitudes-imagenes/proposal.md
+  spec:
+    status: done
+    artifact: openspec/changes/solicitudes-imagenes/specs/request-image-persistence/spec.md
+  design:
+    status: done
+    artifact: openspec/changes/solicitudes-imagenes/design.md
+  tasks:
+    status: done
+    artifact: openspec/changes/solicitudes-imagenes/tasks.md
+  apply:
+    status: in-progress
+    delivery_resolution: 'orchestrator-resolved (auto mode mandate 2026-09-01): size:exception APPROVED — single cohesive unit; no git remote for chains; 420-520 authored lines driven by normative schema + migration #3 + mandated static contracts; implement honestly, no compression'
+  verify:
+    status: pending
+  archive:
+    status: pending
+session:
+  execution_mode: auto
+  delivery_strategy: ask-on-risk
+  review_budget_lines: 400
+  note: "auto mode per user mandate 2026-09-01; orchestrator picks recommended options; blockers surfaced at the end"
+next_recommended: sdd-explore
