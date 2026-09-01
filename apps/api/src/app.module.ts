@@ -6,6 +6,7 @@ import { AppConfigModule } from './config/config.module';
 import { AppConfigService } from './config/app-config.service';
 import { HealthModule } from './health/health.module';
 import { DatabaseModule } from './database/database.module';
+import { CatalogsModule } from './catalogs/catalogs.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { DatabaseModule } from './database/database.module';
     }),
     DatabaseModule,
     HealthModule,
+    CatalogsModule,
   ],
   controllers: [AppController],
 })

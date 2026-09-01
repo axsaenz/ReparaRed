@@ -1,0 +1,44 @@
+change: catalogos-activos
+display_name: "Implement BACKLOG.md item #6: Active catalogs (idempotent seeds + read endpoints for categories and districts)"
+artifact_store: openspec
+created: "2026-09-01"
+depends_on:
+  - base-operativa-api (archived; API foundation for endpoints)
+  - prisma-postgresql (archived; schema foundation)
+  - identidad-perfiles (archived; catalog skeletons categories/districts created empty in migration #2 — sequencing note honored)
+extra_context:
+  ubigeo: "Official UBIGEO catalog marked PENDING in BACKLOG.md. Orchestrator resolved (auto mode, user-authorized hardcode with judgment): best-effort INEI reconstruction — Lima province 43 districts 150101-150143, Callao 7 districts 070101-070107 (Callao verified against SUNAT official annex). Idempotent upsert keyed by ubigeo_code so an official extract can correct data later without migration."
+phases:
+  explore:
+    status: done
+    artifact: openspec/changes/catalogos-activos/exploration.md
+  research:
+    status: unselected
+  pre-proposal:
+    status: confirmed
+    artifact: openspec/changes/catalogos-activos/pre-proposal.md
+  propose:
+    status: done
+    artifact: openspec/changes/catalogos-activos/proposal.md
+  spec:
+    status: done
+    artifact: openspec/changes/catalogos-activos/specs/active-catalogs/spec.md
+  design:
+    status: done
+    artifact: openspec/changes/catalogos-activos/design.md
+  tasks:
+    status: done
+    artifact: openspec/changes/catalogos-activos/tasks.md
+  apply:
+    status: in-progress
+    delivery_resolution: 'orchestrator-resolved (auto mode mandate 2026-09-01): size:exception APPROVED — single cohesive unit; no git remote to host chained PRs; ~550-650 authored lines driven by the domain dataset (50 districts) + mandated contract tests; implement honestly, no compression'
+  verify:
+    status: pending
+  archive:
+    status: pending
+session:
+  execution_mode: auto
+  delivery_strategy: ask-on-risk
+  review_budget_lines: 400
+  note: "auto mode per user mandate 2026-09-01; orchestrator picks recommended options; blockers surfaced at the end"
+next_recommended: sdd-explore
