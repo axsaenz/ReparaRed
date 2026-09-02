@@ -2,10 +2,26 @@
   "name": "@repara/api-client",
   "version": "0.0.0",
   "private": true,
-  "description": "Placeholder; the real OpenAPI-generated client is backlog item #10",
-  "main": "index.js",
+  "description": "Typed client generated from the ReparaRed OpenAPI contract",
+  "main": "dist/index.js",
+  "types": "src/index.ts",
   "exports": {
-    ".": "./index.js",
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
     "./package.json": "./package.json"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "openapi-fetch": "0.17.0"
+  },
+  "devDependencies": {
+    "@repara/config": "^1.0.0",
+    "@types/node": "^24",
+    "typescript": "^5"
   }
 }

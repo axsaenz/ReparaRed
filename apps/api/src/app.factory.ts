@@ -10,6 +10,11 @@ import { fastifyRequestOptions } from './common/request/fastify-hooks';
 import { registerTraceIdHooks } from './common/request/trace-id';
 import { AppModule } from './app.module';
 
+export async function createAppForExport(): Promise<NestFastifyApplication> {
+  // Export uses the same metadata-bearing module graph without listening.
+  return createApp();
+}
+
 export async function createApp(): Promise<NestFastifyApplication> {
   const adapter = new FastifyAdapter(fastifyRequestOptions);
   const app = await NestFactory.create<NestFastifyApplication>(

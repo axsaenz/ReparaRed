@@ -1,0 +1,41 @@
+change: contrato-openapi
+display_name: "Implement BACKLOG.md item #10: Automate the OpenAPI contract (publish conventions and shared schemas, generate the TypeScript client, detect incompatibilities in CI)"
+artifact_store: openspec
+created: "2026-09-01"
+depends_on:
+  - controles-calidad (archived; CI quality workflow to extend)
+  - base-operativa-api (archived; problem+json conventions, /api/v1 prefix, trace headers)
+  - catalogos-activos (archived; first real endpoints — categories/districts — to document in the contract)
+phases:
+  explore:
+    status: done
+    artifact: openspec/changes/contrato-openapi/exploration.md
+  research:
+    status: unselected
+  pre-proposal:
+    status: confirmed
+    artifact: openspec/changes/contrato-openapi/pre-proposal.md
+  propose:
+    status: done
+    artifact: openspec/changes/contrato-openapi/proposal.md
+  spec:
+    status: done
+    artifact: openspec/changes/contrato-openapi/specs/openapi-contract/spec.md
+  design:
+    status: done
+    artifact: openspec/changes/contrato-openapi/design.md
+  tasks:
+    status: done
+    artifact: openspec/changes/contrato-openapi/tasks.md
+  apply:
+    status: in-progress
+  verify:
+    status: pending
+  archive:
+    status: pending
+session:
+  execution_mode: auto
+  delivery_strategy: ask-on-risk
+  review_budget_lines: 400
+  note: "auto mode per user mandate 2026-09-01; orchestrator picks recommended options; blockers surfaced at the end"
+next_recommended: sdd-apply

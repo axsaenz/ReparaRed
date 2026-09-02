@@ -26,5 +26,9 @@ jobs:
         run: npm run typecheck
       - name: Test
         run: npm test
+      - name: Contract gate
+        run: npm run contract:check
+      - name: Contract compatibility
+        run: npm run contract:diff
       - name: Build
         run: npm run build

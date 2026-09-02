@@ -8,5 +8,7 @@ coverage/
 .agents/
 .opencode/
 openspec/
+packages/api-client/src/generated.ts
+apps/api/openapi.json
 **/*.md
 opencode.json

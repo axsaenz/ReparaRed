@@ -5,17 +5,17 @@ import {
   Optional,
   ServiceUnavailableException,
 } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HealthCheckService, HealthIndicatorFunction } from '@nestjs/terminus';
+import { ProblemDetailsDto } from '../common/dto/problem-details.dto';
+import { SystemStatusDto } from '../common/dto/system-status.dto';
 import {
   PrismaHealthIndicator,
   PRISMA_HEALTH_INDICATOR,
 } from '../database/prisma-health.indicator';
 import { FoundationIndicator } from './foundation.indicator';
 
-interface MinimalHealthResponse {
-  status: 'ok';
-}
-
+@ApiTags('system')
 @Controller('health')
 export class HealthController {
   constructor(
@@ -27,13 +27,41 @@ export class HealthController {
   ) {}
 
   @Get('live')
-  async live(): Promise<MinimalHealthResponse> {
+  @ApiOperation({
+    summary: 'Liveness probe',
+    description: 'Unversioned system path: GET /health/live',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Service is live',
+    type: SystemStatusDto,
+  })
+  @ApiResponse({
+    status: 503,
+    description: 'Service unavailable',
+    type: ProblemDetailsDto,
+  })
+  async live(): Promise<SystemStatusDto> {
     await this.healthCheck.check([]);
     return { status: 'ok' };
   }
 
   @Get('ready')
-  async ready(): Promise<MinimalHealthResponse> {
+  @ApiOperation({
+    summary: 'Readiness probe',
+    description: 'Unversioned system path: GET /health/ready',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Service is ready',
+    type: SystemStatusDto,
+  })
+  @ApiResponse({
+    status: 503,
+    description: 'Service not ready',
+    type: ProblemDetailsDto,
+  })
+  async ready(): Promise<SystemStatusDto> {
     try {
       const indicators: HealthIndicatorFunction[] = [
         () => this.foundation.isHealthy(),
