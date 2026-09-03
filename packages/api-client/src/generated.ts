@@ -58,6 +58,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/onboarding/client": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Onboard a verified client */
+        post: operations["RegistrationController_onboardClient"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health/live": {
         parameters: {
             query?: never;
@@ -139,6 +156,23 @@ export interface components {
                 slug: string;
             }[];
         };
+        ClientOnboardingResponseDto: {
+            id: string;
+            profile: {
+                /** Format: uuid */
+                districtId: string;
+                name: string;
+                phone: string;
+            };
+            /** @enum {string} */
+            role: "CLIENT";
+        };
+        ClientProfileResponseDto: {
+            /** Format: uuid */
+            districtId: string;
+            name: string;
+            phone: string;
+        };
         DistrictDto: {
             /**
              * @description Department name
@@ -208,6 +242,17 @@ export interface components {
              * @enum {string}
              */
             currency: "PEN";
+        };
+        OnboardClientRequestDto: {
+            /**
+             * Format: uuid
+             * @example 550e8400-e29b-41d4-a716-446655440000
+             */
+            districtId: string;
+            /** @example Alex Smith */
+            name: string;
+            /** @example +51987654321 */
+            phone: string;
         };
         PaginationQueryDto: {
             /**
@@ -570,6 +615,287 @@ export interface operations {
                 };
             };
             422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /**
+                         * @description Stable error code (9 values)
+                         * @example INPUT_INVALID
+                         * @enum {string}
+                         */
+                        code: "INPUT_INVALID" | "AUTHENTICATION_REQUIRED" | "FORBIDDEN" | "NOT_FOUND" | "CONFLICT" | "SEMANTIC_INVALID" | "RATE_LIMITED" | "DEPENDENCY_UNAVAILABLE" | "INTERNAL_ERROR";
+                        /**
+                         * @description Detailed explanation
+                         * @example The request input is invalid.
+                         */
+                        detail: string;
+                        /** @description Optional field-level errors keyed by field path */
+                        fieldErrors?: {
+                            [key: string]: string[];
+                        };
+                        /**
+                         * @description HTTP status code
+                         * @example 400
+                         */
+                        status: number;
+                        /**
+                         * @description Short human-readable summary
+                         * @example Input Invalid
+                         */
+                        title: string;
+                        /**
+                         * @description Correlation trace ID
+                         * @example 550e8400-e29b-41d4-a716-446655440000
+                         */
+                        traceId: string;
+                        /**
+                         * @description RFC 7807 type URI (urn:reparared:error:{CODE})
+                         * @example urn:reparared:error:INPUT_INVALID
+                         */
+                        type: string;
+                    };
+                };
+            };
+        };
+    };
+    RegistrationController_onboardClient: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /**
+                     * Format: uuid
+                     * @example 550e8400-e29b-41d4-a716-446655440000
+                     */
+                    districtId: string;
+                    /** @example Alex Smith */
+                    name: string;
+                    /** @example +51987654321 */
+                    phone: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        profile: {
+                            /** Format: uuid */
+                            districtId: string;
+                            name: string;
+                            phone: string;
+                        };
+                        /** @enum {string} */
+                        role: "CLIENT";
+                    };
+                };
+            };
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        profile: {
+                            /** Format: uuid */
+                            districtId: string;
+                            name: string;
+                            phone: string;
+                        };
+                        /** @enum {string} */
+                        role: "CLIENT";
+                    };
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /**
+                         * @description Stable error code (9 values)
+                         * @example INPUT_INVALID
+                         * @enum {string}
+                         */
+                        code: "INPUT_INVALID" | "AUTHENTICATION_REQUIRED" | "FORBIDDEN" | "NOT_FOUND" | "CONFLICT" | "SEMANTIC_INVALID" | "RATE_LIMITED" | "DEPENDENCY_UNAVAILABLE" | "INTERNAL_ERROR";
+                        /**
+                         * @description Detailed explanation
+                         * @example The request input is invalid.
+                         */
+                        detail: string;
+                        /** @description Optional field-level errors keyed by field path */
+                        fieldErrors?: {
+                            [key: string]: string[];
+                        };
+                        /**
+                         * @description HTTP status code
+                         * @example 400
+                         */
+                        status: number;
+                        /**
+                         * @description Short human-readable summary
+                         * @example Input Invalid
+                         */
+                        title: string;
+                        /**
+                         * @description Correlation trace ID
+                         * @example 550e8400-e29b-41d4-a716-446655440000
+                         */
+                        traceId: string;
+                        /**
+                         * @description RFC 7807 type URI (urn:reparared:error:{CODE})
+                         * @example urn:reparared:error:INPUT_INVALID
+                         */
+                        type: string;
+                    };
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /**
+                         * @description Stable error code (9 values)
+                         * @example INPUT_INVALID
+                         * @enum {string}
+                         */
+                        code: "INPUT_INVALID" | "AUTHENTICATION_REQUIRED" | "FORBIDDEN" | "NOT_FOUND" | "CONFLICT" | "SEMANTIC_INVALID" | "RATE_LIMITED" | "DEPENDENCY_UNAVAILABLE" | "INTERNAL_ERROR";
+                        /**
+                         * @description Detailed explanation
+                         * @example The request input is invalid.
+                         */
+                        detail: string;
+                        /** @description Optional field-level errors keyed by field path */
+                        fieldErrors?: {
+                            [key: string]: string[];
+                        };
+                        /**
+                         * @description HTTP status code
+                         * @example 400
+                         */
+                        status: number;
+                        /**
+                         * @description Short human-readable summary
+                         * @example Input Invalid
+                         */
+                        title: string;
+                        /**
+                         * @description Correlation trace ID
+                         * @example 550e8400-e29b-41d4-a716-446655440000
+                         */
+                        traceId: string;
+                        /**
+                         * @description RFC 7807 type URI (urn:reparared:error:{CODE})
+                         * @example urn:reparared:error:INPUT_INVALID
+                         */
+                        type: string;
+                    };
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /**
+                         * @description Stable error code (9 values)
+                         * @example INPUT_INVALID
+                         * @enum {string}
+                         */
+                        code: "INPUT_INVALID" | "AUTHENTICATION_REQUIRED" | "FORBIDDEN" | "NOT_FOUND" | "CONFLICT" | "SEMANTIC_INVALID" | "RATE_LIMITED" | "DEPENDENCY_UNAVAILABLE" | "INTERNAL_ERROR";
+                        /**
+                         * @description Detailed explanation
+                         * @example The request input is invalid.
+                         */
+                        detail: string;
+                        /** @description Optional field-level errors keyed by field path */
+                        fieldErrors?: {
+                            [key: string]: string[];
+                        };
+                        /**
+                         * @description HTTP status code
+                         * @example 400
+                         */
+                        status: number;
+                        /**
+                         * @description Short human-readable summary
+                         * @example Input Invalid
+                         */
+                        title: string;
+                        /**
+                         * @description Correlation trace ID
+                         * @example 550e8400-e29b-41d4-a716-446655440000
+                         */
+                        traceId: string;
+                        /**
+                         * @description RFC 7807 type URI (urn:reparared:error:{CODE})
+                         * @example urn:reparared:error:INPUT_INVALID
+                         */
+                        type: string;
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /**
+                         * @description Stable error code (9 values)
+                         * @example INPUT_INVALID
+                         * @enum {string}
+                         */
+                        code: "INPUT_INVALID" | "AUTHENTICATION_REQUIRED" | "FORBIDDEN" | "NOT_FOUND" | "CONFLICT" | "SEMANTIC_INVALID" | "RATE_LIMITED" | "DEPENDENCY_UNAVAILABLE" | "INTERNAL_ERROR";
+                        /**
+                         * @description Detailed explanation
+                         * @example The request input is invalid.
+                         */
+                        detail: string;
+                        /** @description Optional field-level errors keyed by field path */
+                        fieldErrors?: {
+                            [key: string]: string[];
+                        };
+                        /**
+                         * @description HTTP status code
+                         * @example 400
+                         */
+                        status: number;
+                        /**
+                         * @description Short human-readable summary
+                         * @example Input Invalid
+                         */
+                        title: string;
+                        /**
+                         * @description Correlation trace ID
+                         * @example 550e8400-e29b-41d4-a716-446655440000
+                         */
+                        traceId: string;
+                        /**
+                         * @description RFC 7807 type URI (urn:reparared:error:{CODE})
+                         * @example urn:reparared:error:INPUT_INVALID
+                         */
+                        type: string;
+                    };
+                };
+            };
+            500: {
                 headers: {
                     [name: string]: unknown;
                 };

@@ -9,16 +9,23 @@ import { ProblemDetailsFilter } from './common/errors/problem-details.filter';
 import { fastifyRequestOptions } from './common/request/fastify-hooks';
 import { registerTraceIdHooks } from './common/request/trace-id';
 import { AppModule } from './app.module';
+import { FakeIdentityPort, IdentityPort } from './registration/auth.port';
+
+export interface CreateAppOptions {
+  identityPort?: IdentityPort;
+}
 
 export async function createAppForExport(): Promise<NestFastifyApplication> {
   // Export uses the same metadata-bearing module graph without listening.
-  return createApp();
+  return createApp({ identityPort: new FakeIdentityPort() });
 }
 
-export async function createApp(): Promise<NestFastifyApplication> {
+export async function createApp(
+  options: CreateAppOptions = {},
+): Promise<NestFastifyApplication> {
   const adapter = new FastifyAdapter(fastifyRequestOptions);
   const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
+    AppModule.register(options.identityPort),
     adapter,
     { abortOnError: false, logger: false },
   );

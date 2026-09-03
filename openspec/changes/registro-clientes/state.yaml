@@ -1,0 +1,50 @@
+change: registro-clientes
+display_name: "Implement BACKLOG.md item #12: Client registration (selectable district, duplicate email handling, profile creation in a transaction)"
+artifact_store: openspec
+created: "2026-09-01"
+depends_on:
+  - base-operativa-api (archived; api-foundation: env config, problem filter, /api/v1 prefix)
+  - identidad-perfiles (archived; identity-persistence: users/client_profiles/districts + role triggers)
+  - contrato-openapi (archived; openapi-contract: new endpoints MUST regenerate openapi.json + client + pass contract gates)
+phases:
+  explore:
+    status: done
+    artifact: openspec/changes/registro-clientes/exploration.md
+  research:
+    status: unselected
+  pre-proposal:
+    status: confirmed
+    artifact: openspec/changes/registro-clientes/pre-proposal.md
+  propose:
+    status: done
+    artifact: openspec/changes/registro-clientes/proposal.md
+  spec:
+    status: done
+    artifact: openspec/changes/registro-clientes/specs/client-onboarding/spec.md
+  design:
+    status: done
+    artifact: openspec/changes/registro-clientes/design.md
+  tasks:
+    status: done
+    artifact: openspec/changes/registro-clientes/tasks.md
+  apply:
+    status: in-progress
+    delivery_resolution: 'orchestrator-resolved (auto mode mandate 2026-09-01): size:exception APPROVED — single cohesive unit; no git remote for chains; 550-650 authored lines (module + service + mandated tests; generated contract churn excluded); implement honestly, no compression'
+  spec:
+    status: pending
+  design:
+    status: pending
+  tasks:
+    status: pending
+  apply:
+    status: pending
+  verify:
+    status: pending
+  archive:
+    status: pending
+session:
+  execution_mode: auto
+  delivery_strategy: ask-on-risk
+  review_budget_lines: 400
+  note: "auto mode per user mandate 2026-09-01; orchestrator picks recommended options; blockers surfaced at the end"
+next_recommended: sdd-propose

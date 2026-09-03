@@ -63,6 +63,67 @@
         ],
         "type": "object"
       },
+      "ClientOnboardingResponseDto": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "profile": {
+            "properties": {
+              "districtId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "phone": {
+                "pattern": "^\\+[1-9]\\d{7,14}$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "phone",
+              "districtId"
+            ],
+            "type": "object"
+          },
+          "role": {
+            "enum": [
+              "CLIENT"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "role",
+          "profile"
+        ],
+        "type": "object"
+      },
+      "ClientProfileResponseDto": {
+        "properties": {
+          "districtId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "phone": {
+            "pattern": "^\\+[1-9]\\d{7,14}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "phone",
+          "districtId"
+        ],
+        "type": "object"
+      },
       "DistrictDto": {
         "properties": {
           "department": {
@@ -169,6 +230,32 @@
         "required": [
           "amount",
           "currency"
+        ],
+        "type": "object"
+      },
+      "OnboardClientRequestDto": {
+        "properties": {
+          "districtId": {
+            "example": "550e8400-e29b-41d4-a716-446655440000",
+            "format": "uuid",
+            "type": "string"
+          },
+          "name": {
+            "example": "Alex Smith",
+            "maxLength": 100,
+            "minLength": 2,
+            "type": "string"
+          },
+          "phone": {
+            "example": "+51987654321",
+            "pattern": "^\\+[1-9]\\d{7,14}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "phone",
+          "districtId"
         ],
         "type": "object"
       },
@@ -826,6 +913,500 @@
         "summary": "List active districts",
         "tags": [
           "catalogs"
+        ]
+      }
+    },
+    "/api/v1/onboarding/client": {
+      "post": {
+        "operationId": "RegistrationController_onboardClient",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "districtId": {
+                    "example": "550e8400-e29b-41d4-a716-446655440000",
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "name": {
+                    "example": "Alex Smith",
+                    "maxLength": 100,
+                    "minLength": 2,
+                    "type": "string"
+                  },
+                  "phone": {
+                    "example": "+51987654321",
+                    "pattern": "^\\+[1-9]\\d{7,14}$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "phone",
+                  "districtId"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "profile": {
+                      "properties": {
+                        "districtId": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "phone": {
+                          "pattern": "^\\+[1-9]\\d{7,14}$",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "phone",
+                        "districtId"
+                      ],
+                      "type": "object"
+                    },
+                    "role": {
+                      "enum": [
+                        "CLIENT"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "role",
+                    "profile"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "profile": {
+                      "properties": {
+                        "districtId": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "phone": {
+                          "pattern": "^\\+[1-9]\\d{7,14}$",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "phone",
+                        "districtId"
+                      ],
+                      "type": "object"
+                    },
+                    "role": {
+                      "enum": [
+                        "CLIENT"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "role",
+                    "profile"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "description": "Stable error code (9 values)",
+                      "enum": [
+                        "INPUT_INVALID",
+                        "AUTHENTICATION_REQUIRED",
+                        "FORBIDDEN",
+                        "NOT_FOUND",
+                        "CONFLICT",
+                        "SEMANTIC_INVALID",
+                        "RATE_LIMITED",
+                        "DEPENDENCY_UNAVAILABLE",
+                        "INTERNAL_ERROR"
+                      ],
+                      "example": "INPUT_INVALID",
+                      "type": "string"
+                    },
+                    "detail": {
+                      "description": "Detailed explanation",
+                      "example": "The request input is invalid.",
+                      "type": "string"
+                    },
+                    "fieldErrors": {
+                      "additionalProperties": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "description": "Optional field-level errors keyed by field path",
+                      "type": "object"
+                    },
+                    "status": {
+                      "description": "HTTP status code",
+                      "example": 400,
+                      "type": "number"
+                    },
+                    "title": {
+                      "description": "Short human-readable summary",
+                      "example": "Input Invalid",
+                      "type": "string"
+                    },
+                    "traceId": {
+                      "description": "Correlation trace ID",
+                      "example": "550e8400-e29b-41d4-a716-446655440000",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "RFC 7807 type URI (urn:reparared:error:{CODE})",
+                      "example": "urn:reparared:error:INPUT_INVALID",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "detail",
+                    "code",
+                    "traceId"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "description": "Stable error code (9 values)",
+                      "enum": [
+                        "INPUT_INVALID",
+                        "AUTHENTICATION_REQUIRED",
+                        "FORBIDDEN",
+                        "NOT_FOUND",
+                        "CONFLICT",
+                        "SEMANTIC_INVALID",
+                        "RATE_LIMITED",
+                        "DEPENDENCY_UNAVAILABLE",
+                        "INTERNAL_ERROR"
+                      ],
+                      "example": "INPUT_INVALID",
+                      "type": "string"
+                    },
+                    "detail": {
+                      "description": "Detailed explanation",
+                      "example": "The request input is invalid.",
+                      "type": "string"
+                    },
+                    "fieldErrors": {
+                      "additionalProperties": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "description": "Optional field-level errors keyed by field path",
+                      "type": "object"
+                    },
+                    "status": {
+                      "description": "HTTP status code",
+                      "example": 400,
+                      "type": "number"
+                    },
+                    "title": {
+                      "description": "Short human-readable summary",
+                      "example": "Input Invalid",
+                      "type": "string"
+                    },
+                    "traceId": {
+                      "description": "Correlation trace ID",
+                      "example": "550e8400-e29b-41d4-a716-446655440000",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "RFC 7807 type URI (urn:reparared:error:{CODE})",
+                      "example": "urn:reparared:error:INPUT_INVALID",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "detail",
+                    "code",
+                    "traceId"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "description": "Stable error code (9 values)",
+                      "enum": [
+                        "INPUT_INVALID",
+                        "AUTHENTICATION_REQUIRED",
+                        "FORBIDDEN",
+                        "NOT_FOUND",
+                        "CONFLICT",
+                        "SEMANTIC_INVALID",
+                        "RATE_LIMITED",
+                        "DEPENDENCY_UNAVAILABLE",
+                        "INTERNAL_ERROR"
+                      ],
+                      "example": "INPUT_INVALID",
+                      "type": "string"
+                    },
+                    "detail": {
+                      "description": "Detailed explanation",
+                      "example": "The request input is invalid.",
+                      "type": "string"
+                    },
+                    "fieldErrors": {
+                      "additionalProperties": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "description": "Optional field-level errors keyed by field path",
+                      "type": "object"
+                    },
+                    "status": {
+                      "description": "HTTP status code",
+                      "example": 400,
+                      "type": "number"
+                    },
+                    "title": {
+                      "description": "Short human-readable summary",
+                      "example": "Input Invalid",
+                      "type": "string"
+                    },
+                    "traceId": {
+                      "description": "Correlation trace ID",
+                      "example": "550e8400-e29b-41d4-a716-446655440000",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "RFC 7807 type URI (urn:reparared:error:{CODE})",
+                      "example": "urn:reparared:error:INPUT_INVALID",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "detail",
+                    "code",
+                    "traceId"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "description": "Stable error code (9 values)",
+                      "enum": [
+                        "INPUT_INVALID",
+                        "AUTHENTICATION_REQUIRED",
+                        "FORBIDDEN",
+                        "NOT_FOUND",
+                        "CONFLICT",
+                        "SEMANTIC_INVALID",
+                        "RATE_LIMITED",
+                        "DEPENDENCY_UNAVAILABLE",
+                        "INTERNAL_ERROR"
+                      ],
+                      "example": "INPUT_INVALID",
+                      "type": "string"
+                    },
+                    "detail": {
+                      "description": "Detailed explanation",
+                      "example": "The request input is invalid.",
+                      "type": "string"
+                    },
+                    "fieldErrors": {
+                      "additionalProperties": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "description": "Optional field-level errors keyed by field path",
+                      "type": "object"
+                    },
+                    "status": {
+                      "description": "HTTP status code",
+                      "example": 400,
+                      "type": "number"
+                    },
+                    "title": {
+                      "description": "Short human-readable summary",
+                      "example": "Input Invalid",
+                      "type": "string"
+                    },
+                    "traceId": {
+                      "description": "Correlation trace ID",
+                      "example": "550e8400-e29b-41d4-a716-446655440000",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "RFC 7807 type URI (urn:reparared:error:{CODE})",
+                      "example": "urn:reparared:error:INPUT_INVALID",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "detail",
+                    "code",
+                    "traceId"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "description": "Stable error code (9 values)",
+                      "enum": [
+                        "INPUT_INVALID",
+                        "AUTHENTICATION_REQUIRED",
+                        "FORBIDDEN",
+                        "NOT_FOUND",
+                        "CONFLICT",
+                        "SEMANTIC_INVALID",
+                        "RATE_LIMITED",
+                        "DEPENDENCY_UNAVAILABLE",
+                        "INTERNAL_ERROR"
+                      ],
+                      "example": "INPUT_INVALID",
+                      "type": "string"
+                    },
+                    "detail": {
+                      "description": "Detailed explanation",
+                      "example": "The request input is invalid.",
+                      "type": "string"
+                    },
+                    "fieldErrors": {
+                      "additionalProperties": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "description": "Optional field-level errors keyed by field path",
+                      "type": "object"
+                    },
+                    "status": {
+                      "description": "HTTP status code",
+                      "example": 400,
+                      "type": "number"
+                    },
+                    "title": {
+                      "description": "Short human-readable summary",
+                      "example": "Input Invalid",
+                      "type": "string"
+                    },
+                    "traceId": {
+                      "description": "Correlation trace ID",
+                      "example": "550e8400-e29b-41d4-a716-446655440000",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "RFC 7807 type URI (urn:reparared:error:{CODE})",
+                      "example": "urn:reparared:error:INPUT_INVALID",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "detail",
+                    "code",
+                    "traceId"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Onboard a verified client",
+        "tags": [
+          "onboarding"
         ]
       }
     },
