@@ -28,14 +28,17 @@ phases:
     status: done
     artifact: openspec/changes/contrato-openapi/tasks.md
   apply:
-    status: in-progress
+    status: done
+    progress: '5/5 phases; commit 8b25cf5 (amended x2 after remediations); ~599 impl lines + fixes'
+    artifact: openspec/changes/contrato-openapi/apply-progress.md
   verify:
-    status: pending
+    status: done
+    artifact: openspec/changes/contrato-openapi/verify-report.md
   archive:
-    status: pending
+    status: done
 session:
   execution_mode: auto
   delivery_strategy: ask-on-risk
   review_budget_lines: 400
   note: "auto mode per user mandate 2026-09-01; orchestrator picks recommended options; blockers surfaced at the end"
-next_recommended: sdd-apply
+next_recommended: "backlog item #11 (environments and deployment) — start new SDD cycle; REMINDERS: (a) live PostgreSQL gate UNSATISFIED for migrations #1-#5 + seed + trigger/concurrency behavior — item #11 (Supabase/Vercel/Railway infra) is the natural place to close it; (b) contract pipeline is live: any new endpoint MUST regenerate openapi.json + client and pass contract:check; (c) UBIGEO dataset best-effort pending official extract"
