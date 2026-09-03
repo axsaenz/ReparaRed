@@ -28,8 +28,10 @@ phases:
     status: done
     artifact: openspec/changes/registro-clientes/tasks.md
   apply:
-    status: in-progress
-    delivery_resolution: 'orchestrator-resolved (auto mode mandate 2026-09-01): size:exception APPROVED � single cohesive unit; no git remote for chains; 550-650 authored lines (module + service + mandated tests; generated contract churn excluded); implement honestly, no compression'
+    status: done
+    progress: '12/12 tasks; commit 2be0b51; 409 prod + 620 test lines (size:exception; generated churn excluded)'
+    artifact: openspec/changes/registro-clientes/apply-progress.md
+    delivery_resolution: 'orchestrator-resolved (auto mode mandate 2026-09-01): size:exception APPROVED � single cohesive unit; no git remote for chains; 550-650 authored lines (module + service + mandated tests; generated contract churn excluded); implement honestly, no compression'
   spec:
     status: pending
   design:
@@ -39,12 +41,13 @@ phases:
   apply:
     status: pending
   verify:
-    status: pending
+    status: done
+    artifact: openspec/changes/registro-clientes/verify-report.md
   archive:
-    status: pending
+    status: done
 session:
   execution_mode: auto
   delivery_strategy: ask-on-risk
   review_budget_lines: 400
   note: "auto mode per user mandate 2026-09-01; orchestrator picks recommended options; blockers surfaced at the end"
-next_recommended: sdd-propose
+next_recommended: "backlog item #13 (login/session BFF) — start new SDD cycle; REMINDERS: (a) #13 is where the REAL identity adapter + JWT verification arrive (the IdentityPort seam exists; production fails closed until then); (b) live gates pending: Supabase provisioning, live PG evidence, BFF flow; (c) technician onboarding has no dedicated backlog item — ownership question recorded at #15/#16 review; (d) contract pipeline: new endpoints regenerate artifacts"
