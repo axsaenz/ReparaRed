@@ -1,0 +1,109 @@
+name: deploy-production
+
+on:
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: Run the idempotent catalog seed for bootstrap or first release only
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  quality-reuse:
+    uses: ./.github/workflows/quality.yml
+
+  release:
+    needs: quality-reuse
+    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency:
+      group: production-release
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Pin npm 12
+        run: npm install --global npm@12.0.1
+      - name: Install
+        run: npm ci
+      - name: Generate Prisma client
+        run: npm run prisma:generate --workspace=@repara/api
+      - name: Apply Prisma migrations once
+        env:
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+        run: |
+          if [ -z "$DIRECT_URL" ]; then
+            echo "::error::DIRECT_URL is missing"
+            exit 1
+          fi
+          echo "::add-mask::$DIRECT_URL"
+          npm run prisma:migrate:deploy --workspace=@repara/api
+      - name: Seed catalog (bootstrap only)
+        if: inputs.seed == true
+        env:
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+        run: |
+          if [ -z "$DIRECT_URL" ]; then
+            echo "::error::DIRECT_URL is missing"
+            exit 1
+          fi
+          echo "::add-mask::$DIRECT_URL"
+          npm run prisma:seed --workspace=@repara/api
+      - name: Promote API on Railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
+        run: |
+          if [ -z "$RAILWAY_TOKEN" ] || [ -z "$RAILWAY_SERVICE_ID" ]; then
+            echo "::error::Railway release secrets are missing"
+            exit 1
+          fi
+          echo "::add-mask::$RAILWAY_TOKEN"
+          npx --yes @railway/cli@latest up --service "$RAILWAY_SERVICE_ID" --environment production --ci
+      - name: Deploy web on Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          if [ -z "$VERCEL_TOKEN" ] || [ -z "$VERCEL_ORG_ID" ] || [ -z "$VERCEL_PROJECT_ID" ]; then
+            echo "::error::Vercel release secrets are missing"
+            exit 1
+          fi
+          echo "::add-mask::$VERCEL_TOKEN"
+          npx --yes vercel@latest deploy --prod --yes --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID" --cwd .
+      - name: Smoke checks
+        env:
+          API_ORIGIN: ${{ vars.PRODUCTION_API_ORIGIN }}
+          WEB_ORIGIN: ${{ vars.PRODUCTION_WEB_ORIGIN }}
+        run: |
+          if [ -z "$API_ORIGIN" ] || [ -z "$WEB_ORIGIN" ]; then
+            echo "::error::Production smoke-check origins are missing"
+            exit 1
+          fi
+          node <<'NODE'
+          (async () => {
+            const checks = [
+              ['api-live', `${process.env.API_ORIGIN}/health/live`],
+              ['api-ready', `${process.env.API_ORIGIN}/health/ready`],
+              ['web', process.env.WEB_ORIGIN],
+            ];
+            for (const [name, url] of checks) {
+              const response = await fetch(url);
+              if (response.status !== 200) {
+                throw new Error(`${name} returned ${response.status}`);
+              }
+            }
+          })().catch((error) => {
+            console.error(error.message);
+            process.exitCode = 1;
+          });
+          NODE

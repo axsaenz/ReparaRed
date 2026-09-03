@@ -1,6 +1,7 @@
 name: quality
 
 on:
+  workflow_call:
   push:
     branches: [main]
   pull_request:
@@ -32,3 +33,5 @@ jobs:
         run: npm run contract:diff
       - name: Build
         run: npm run build
+      - name: Deployment static validation
+        run: npm run test:deployment

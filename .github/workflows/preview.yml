@@ -1,0 +1,75 @@
+name: preview
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    outputs:
+      proceed: ${{ steps.credentials.outputs.proceed }}
+    steps:
+      - id: credentials
+        name: Check isolated preview credentials
+        env:
+          SUPABASE_PREVIEW_URL: ${{ secrets.SUPABASE_PREVIEW_URL }}
+          SUPABASE_PREVIEW_SERVICE_KEY: ${{ secrets.SUPABASE_PREVIEW_SERVICE_KEY }}
+          SUPABASE_PREVIEW_DATABASE_URL: ${{ secrets.SUPABASE_PREVIEW_DATABASE_URL }}
+          SUPABASE_PREVIEW_DIRECT_URL: ${{ secrets.SUPABASE_PREVIEW_DIRECT_URL }}
+          SUPABASE_PREVIEW_BUCKET_NAME: ${{ secrets.SUPABASE_PREVIEW_BUCKET_NAME }}
+          RAILWAY_PREVIEW_TOKEN: ${{ secrets.RAILWAY_PREVIEW_TOKEN }}
+          RAILWAY_PREVIEW_SERVICE_ID: ${{ secrets.RAILWAY_PREVIEW_SERVICE_ID }}
+          VERCEL_PREVIEW_TOKEN: ${{ secrets.VERCEL_PREVIEW_TOKEN }}
+          VERCEL_PREVIEW_ORG_ID: ${{ secrets.VERCEL_PREVIEW_ORG_ID }}
+          VERCEL_PREVIEW_PROJECT_ID: ${{ secrets.VERCEL_PREVIEW_PROJECT_ID }}
+          PREVIEW_RESOURCE_CLASS: ${{ vars.PREVIEW_RESOURCE_CLASS }}
+          PREVIEW_API_ORIGIN: ${{ vars.PREVIEW_API_ORIGIN }}
+          PREVIEW_WEB_ORIGIN: ${{ vars.PREVIEW_WEB_ORIGIN }}
+        run: |
+          missing=0
+          for name in SUPABASE_PREVIEW_URL SUPABASE_PREVIEW_SERVICE_KEY SUPABASE_PREVIEW_DATABASE_URL SUPABASE_PREVIEW_DIRECT_URL SUPABASE_PREVIEW_BUCKET_NAME RAILWAY_PREVIEW_TOKEN RAILWAY_PREVIEW_SERVICE_ID VERCEL_PREVIEW_TOKEN VERCEL_PREVIEW_ORG_ID VERCEL_PREVIEW_PROJECT_ID PREVIEW_API_ORIGIN PREVIEW_WEB_ORIGIN; do
+            value="${!name:-}"
+            if [ -z "$value" ]; then
+              missing=1
+            else
+              echo "::add-mask::$value"
+            fi
+          done
+          if [ "$PREVIEW_RESOURCE_CLASS" != "isolated" ]; then
+            missing=1
+          fi
+          if [ "$missing" -ne 0 ]; then
+            echo "PREVIEW SKIPPED (no isolated preview credentials)"
+            echo "### PREVIEW SKIPPED (no isolated preview credentials)" >> "$GITHUB_STEP_SUMMARY"
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "proceed=true" >> "$GITHUB_OUTPUT"
+
+  provider-preview-validation:
+    needs: preflight
+    if: needs.preflight.outputs.proceed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Validate and annotate isolated provider previews
+        env:
+          PREVIEW_API_ORIGIN: ${{ vars.PREVIEW_API_ORIGIN }}
+          PREVIEW_WEB_ORIGIN: ${{ vars.PREVIEW_WEB_ORIGIN }}
+        run: |
+          npm run test:deployment
+          {
+            echo "### Provider-native isolated preview wiring"
+            echo "Railway and Vercel integrations are expected to create the PR URLs."
+            echo "API preview: $PREVIEW_API_ORIGIN"
+            echo "Web preview: $PREVIEW_WEB_ORIGIN"
+          } >> "$GITHUB_STEP_SUMMARY"

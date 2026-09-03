@@ -26,6 +26,7 @@
     "contract:validate": "node scripts/contract.mjs validate",
     "contract:check": "node scripts/contract.mjs check",
     "contract:diff": "node scripts/contract.mjs diff",
+    "test:deployment": "vitest run tests/deployment-config.spec.mjs",
     "ci:check": "npm ci"
   },
   "devDependencies": {
@@ -36,6 +37,7 @@
     "openapi-typescript": "7.13.0",
     "prettier": "^3.9.6",
     "typescript-eslint": "^8.69.0",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.11",
+    "yaml": "^2.9.0"
   }
 }
