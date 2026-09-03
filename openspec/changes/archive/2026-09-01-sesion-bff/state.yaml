@@ -28,8 +28,10 @@ phases:
     status: done
     artifact: openspec/changes/sesion-bff/tasks.md
   apply:
-    status: in-progress
-    delivery_resolution: 'orchestrator-resolved (auto mode mandate 2026-09-01): size:exception APPROVED � single cohesive unit; no git remote for chains; 900-1100 authored lines (API auth + web BFF + mandated tests both sides); implement honestly, no compression'
+    status: done
+    progress: '15/15 tasks; commit 2965fee; 1492 authored lines (size:exception)'
+    artifact: openspec/changes/sesion-bff/apply-progress.md
+    delivery_resolution: 'orchestrator-resolved (auto mode mandate 2026-09-01): size:exception APPROVED � single cohesive unit; no git remote for chains; 900-1100 authored lines (API auth + web BFF + mandated tests both sides); implement honestly, no compression'
   spec:
     status: pending
   design:
@@ -39,12 +41,13 @@ phases:
   apply:
     status: pending
   verify:
-    status: pending
+    status: done
+    artifact: openspec/changes/sesion-bff/verify-report.md
   archive:
-    status: pending
+    status: done
 session:
   execution_mode: auto
   delivery_strategy: ask-on-risk
   review_budget_lines: 400
   note: "auto mode per user mandate 2026-09-01; orchestrator picks recommended options; blockers surfaced at the end"
-next_recommended: sdd-propose
+next_recommended: "backlog item #14 (edit client profile) — start new SDD cycle; REMINDERS: (a) #14+ private routes consume the auth guard + @CurrentIdentity decorator; BFF adapters forward bearer via withBearer; (b) live gates pending: Supabase provisioning + claim compatibility, production route smoke, live PG, deployment; (c) contract pipeline: new API endpoints regenerate artifacts; (d) /me/profile endpoint likely lands in #14 per TD §7.2 planned surface"
