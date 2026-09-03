@@ -12,16 +12,16 @@ does not contain URLs, tokens, keys, passwords, or project identifiers.
 
 | Environment | Application | Consumed today | Future or planned | Value owner |
 |---|---|---|---|---|
-| Local | API | `NODE_ENV`, `PORT`, `HOST`, `LOG_LEVEL`, `DATABASE_URL`, `DIRECT_URL` | `AUTH_ISSUER_URL`, `AUTH_JWKS_URL`, `STORAGE_SERVICE_KEY`, `STORAGE_BUCKET_NAME` | Local developer or local secret store |
-| Preview | API | `NODE_ENV`, `PORT`, `HOST`, `LOG_LEVEL`, `DATABASE_URL`, `DIRECT_URL` | `AUTH_ISSUER_URL`, `AUTH_JWKS_URL`, `STORAGE_SERVICE_KEY`, `STORAGE_BUCKET_NAME` | GitHub preview environment and isolated provider project |
-| Production | API | `NODE_ENV`, `PORT`, `HOST`, `LOG_LEVEL`, `DATABASE_URL`, `DIRECT_URL` | `AUTH_ISSUER_URL`, `AUTH_JWKS_URL`, `STORAGE_SERVICE_KEY`, `STORAGE_BUCKET_NAME` | Railway production environment and GitHub production environment |
-| Local | Web | None | `API_ORIGIN`, `NEXT_PUBLIC_APP_ENV` | Local developer settings |
-| Preview | Web | None | `API_ORIGIN`, `NEXT_PUBLIC_APP_ENV` | Vercel preview settings |
-| Production | Web | None | `API_ORIGIN`, `NEXT_PUBLIC_APP_ENV` | Vercel production settings |
+| Local | API | `NODE_ENV`, `PORT`, `HOST`, `LOG_LEVEL`, `DATABASE_URL`, `DIRECT_URL`, `AUTH_ISSUER_URL`, `AUTH_JWKS_URL`, `AUTH_AUDIENCE` | `STORAGE_SERVICE_KEY`, `STORAGE_BUCKET_NAME` | Local developer or local secret store |
+| Preview | API | `NODE_ENV`, `PORT`, `HOST`, `LOG_LEVEL`, `DATABASE_URL`, `DIRECT_URL`, `AUTH_ISSUER_URL`, `AUTH_JWKS_URL`, `AUTH_AUDIENCE` | `STORAGE_SERVICE_KEY`, `STORAGE_BUCKET_NAME` | GitHub preview environment and isolated provider project |
+| Production | API | `NODE_ENV`, `PORT`, `HOST`, `LOG_LEVEL`, `DATABASE_URL`, `DIRECT_URL`, `AUTH_ISSUER_URL`, `AUTH_JWKS_URL`, `AUTH_AUDIENCE` | `STORAGE_SERVICE_KEY`, `STORAGE_BUCKET_NAME` | Railway production environment and GitHub production environment |
+| Local | Web | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `ALLOWED_ORIGINS`, `ALLOW_INSECURE_LOCAL_COOKIES` | `API_ORIGIN`, `NEXT_PUBLIC_APP_ENV` | Local developer settings |
+| Preview | Web | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `ALLOWED_ORIGINS`, `ALLOW_INSECURE_LOCAL_COOKIES` | `API_ORIGIN`, `NEXT_PUBLIC_APP_ENV` | Vercel preview settings |
+| Production | Web | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `ALLOWED_ORIGINS` | `ALLOW_INSECURE_LOCAL_COOKIES`, `API_ORIGIN`, `NEXT_PUBLIC_APP_ENV` | Vercel production settings |
 
 ## API variables
 
-The current API reads the following six variables:
+The current API reads the following nine variables:
 
 | Name | Classification | Current use |
 |---|---|---|
@@ -31,28 +31,32 @@ The current API reads the following six variables:
 | `LOG_LEVEL` | Server-only | Selects the application log level. |
 | `DATABASE_URL` | Server-only | Runtime transaction-pool connection. |
 | `DIRECT_URL` | Server-only | Prisma migration and approved seed connection. |
+| `AUTH_ISSUER_URL` | Server-only | JWT issuer used for local token verification. |
+| `AUTH_JWKS_URL` | Server-only | Cached remote key set used for local token verification. |
+| `AUTH_AUDIENCE` | Server-only | Required JWT audience used for local token verification. |
 
 `DATABASE_URL` and `DIRECT_URL` are never public values. In production,
 `DATABASE_URL` should be the provider's transaction-pool connection and
 `DIRECT_URL` should be the direct PostgreSQL connection reserved for Prisma
 operations. The web host receives neither value.
 
-The following names are reserved for later auth and storage adapters. They are
-documented now for planning only and are commented out in the example file:
+The remaining names below are reserved for later storage adapters; the auth
+names are consumed by this change and remain server-only.
 
 | Name | Classification | Status |
 |---|---|---|
-| `AUTH_ISSUER_URL` | Server-only | Future auth adapter; not consumed today. |
-| `AUTH_JWKS_URL` | Server-only | Future auth adapter; not consumed today. |
+| `AUTH_ISSUER_URL` | Server-only | Consumed by API JWT verification; never logged. |
+| `AUTH_JWKS_URL` | Server-only | Consumed by API cached JWKS verification; never logged. |
+| `AUTH_AUDIENCE` | Server-only | Consumed by API JWT verification; never logged. |
 | `STORAGE_SERVICE_KEY` | Server-only | Future storage adapter; never public. |
 | `STORAGE_BUCKET_NAME` | Server-only | Future storage adapter; not consumed today. |
 
 ## Web variables
 
-The current web application consumes no environment variables. Future BFF
-integration may add `API_ORIGIN` as a server-only origin and
-`NEXT_PUBLIC_APP_ENV` as a deliberately public environment label. Neither
-future variable grants database or Storage access. Do not invent
+The web BFF consumes `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `ALLOWED_ORIGINS`, and
+the explicit local-only `ALLOW_INSECURE_LOCAL_COOKIES` switch. `API_ORIGIN` is
+reserved as a server-only origin and `NEXT_PUBLIC_APP_ENV` as a deliberately
+public environment label. None grants database or Storage access. Do not invent
 `NEXT_PUBLIC_DATABASE_URL`, `NEXT_PUBLIC_DIRECT_URL`, service keys, or other
 privileged browser variables.
 

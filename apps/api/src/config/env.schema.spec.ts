@@ -44,6 +44,42 @@ describe('environment schema', () => {
     expect(result.DATABASE_URL).toBeUndefined();
   });
 
+  it('accepts complete optional auth configuration without making it required at boot', () => {
+    const result = validateEnvironment({
+      AUTH_ISSUER_URL: 'https://auth.example.test',
+      AUTH_JWKS_URL: 'https://auth.example.test/.well-known/jwks.json',
+      AUTH_AUDIENCE: 'reparared-api',
+    });
+
+    expect(result).toMatchObject({
+      AUTH_ISSUER_URL: 'https://auth.example.test',
+      AUTH_JWKS_URL: 'https://auth.example.test/.well-known/jwks.json',
+      AUTH_AUDIENCE: 'reparared-api',
+    });
+  });
+
+  it('treats blank auth example assignments as absent for offline boot', () => {
+    const result = validateEnvironment({
+      AUTH_ISSUER_URL: '',
+      AUTH_JWKS_URL: '',
+      AUTH_AUDIENCE: '',
+    });
+
+    expect(result.AUTH_ISSUER_URL).toBeUndefined();
+    expect(result.AUTH_JWKS_URL).toBeUndefined();
+    expect(result.AUTH_AUDIENCE).toBeUndefined();
+  });
+
+  it.each([
+    { AUTH_ISSUER_URL: 'ftp://auth.example.test' },
+    { AUTH_JWKS_URL: 'ftp://auth.example.test' },
+    { AUTH_AUDIENCE: 42 },
+  ])('rejects malformed auth configuration safely', (input) => {
+    const { error } = envSchema.validate(input);
+    expect(error).toBeDefined();
+    expect(error?.message).not.toContain(Object.values(input)[0]);
+  });
+
   it.each(['0', '65536', 'not-a-port'])(
     'rejects invalid PORT %s safely',
     (port) => {

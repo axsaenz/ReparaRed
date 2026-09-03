@@ -7,19 +7,14 @@ import { AppConfigService } from './config/app-config.service';
 import { HealthModule } from './health/health.module';
 import { DatabaseModule } from './database/database.module';
 import { CatalogsModule } from './catalogs/catalogs.module';
-import {
-  IdentityPort,
-  UnavailableIdentityPort,
-} from './registration/auth.port';
+import { IdentityPort } from './registration/auth.port';
 import { RegistrationModule } from './registration/registration.module';
 
 @Module({
   controllers: [AppController],
 })
 export class AppModule {
-  static register(
-    identityPort: IdentityPort = new UnavailableIdentityPort(),
-  ): DynamicModule {
+  static register(identityPort?: IdentityPort): DynamicModule {
     return {
       module: AppModule,
       imports: [

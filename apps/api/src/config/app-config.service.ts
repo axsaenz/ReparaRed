@@ -27,4 +27,22 @@ export class AppConfigService {
   get databaseUrl(): string | undefined {
     return this.config.get<string>('DATABASE_URL', { infer: true });
   }
+
+  get authIssuerUrl(): string | undefined {
+    return this.config.get<string | undefined>('AUTH_ISSUER_URL', {
+      infer: true,
+    });
+  }
+
+  get authJwksUrl(): string | undefined {
+    return this.config.get<string | undefined>('AUTH_JWKS_URL', {
+      infer: true,
+    });
+  }
+
+  get authAudience(): string | undefined {
+    return this.config.get<string | undefined>('AUTH_AUDIENCE', {
+      infer: true,
+    });
+  }
 }

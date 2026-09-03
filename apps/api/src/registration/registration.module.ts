@@ -7,19 +7,19 @@ import {
 } from './auth.port';
 import { RegistrationController } from './registration.controller';
 import { RegistrationService } from './registration.service';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({})
 export class RegistrationModule {
-  static register(
-    identityPort: IdentityPort = new UnavailableIdentityPort(),
-  ): DynamicModule {
+  static register(identityPort?: IdentityPort): DynamicModule {
+    const resolvedIdentityPort = identityPort ?? new UnavailableIdentityPort();
     return {
       module: RegistrationModule,
-      imports: [DatabaseModule],
+      imports: [DatabaseModule, AuthModule.register(identityPort)],
       controllers: [RegistrationController],
       providers: [
         RegistrationService,
-        { provide: IDENTITY_PORT, useValue: identityPort },
+        { provide: IDENTITY_PORT, useValue: resolvedIdentityPort },
       ],
       exports: [RegistrationService],
     };

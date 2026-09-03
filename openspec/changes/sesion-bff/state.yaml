@@ -1,0 +1,50 @@
+change: sesion-bff
+display_name: "Implement BACKLOG.md item #13: BFF login/session (same-origin Next.js session, short-lived tokens forwarded to the API)"
+artifact_store: openspec
+created: "2026-09-01"
+depends_on:
+  - base-operativa-api (archived; api-foundation)
+  - registro-clientes (archived; client-onboarding â€” IdentityPort seam exists, production fails closed until real adapter)
+  - contrato-openapi (archived; contract pipeline for any new API surface)
+phases:
+  explore:
+    status: done
+    artifact: openspec/changes/sesion-bff/exploration.md
+  research:
+    status: unselected
+  pre-proposal:
+    status: confirmed
+    artifact: openspec/changes/sesion-bff/pre-proposal.md
+  propose:
+    status: done
+    artifact: openspec/changes/sesion-bff/proposal.md
+  spec:
+    status: done
+    artifact: openspec/changes/sesion-bff/specs/bff-session/spec.md
+  design:
+    status: done
+    artifact: openspec/changes/sesion-bff/design.md
+  tasks:
+    status: done
+    artifact: openspec/changes/sesion-bff/tasks.md
+  apply:
+    status: in-progress
+    delivery_resolution: 'orchestrator-resolved (auto mode mandate 2026-09-01): size:exception APPROVED — single cohesive unit; no git remote for chains; 900-1100 authored lines (API auth + web BFF + mandated tests both sides); implement honestly, no compression'
+  spec:
+    status: pending
+  design:
+    status: pending
+  tasks:
+    status: pending
+  apply:
+    status: pending
+  verify:
+    status: pending
+  archive:
+    status: pending
+session:
+  execution_mode: auto
+  delivery_strategy: ask-on-risk
+  review_budget_lines: 400
+  note: "auto mode per user mandate 2026-09-01; orchestrator picks recommended options; blockers surfaced at the end"
+next_recommended: sdd-propose

@@ -1,12 +1,9 @@
 import { UnauthorizedException } from '@nestjs/common';
+import type { TrustedIdentity as AuthTrustedIdentity } from '../auth/jwt-verifier.port';
 
 export const IDENTITY_PORT = Symbol('IDENTITY_PORT');
 
-export interface TrustedIdentity {
-  authSubject: string;
-  email: string;
-  emailVerified: boolean;
-}
+export type TrustedIdentity = AuthTrustedIdentity;
 
 export interface IdentityPort {
   getVerifiedIdentity(): Promise<TrustedIdentity>;

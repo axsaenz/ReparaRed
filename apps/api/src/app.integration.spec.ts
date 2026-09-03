@@ -81,6 +81,23 @@ describe('API operational foundation', () => {
     }
   });
 
+  it('guards onboarding when verifier configuration is absent', async () => {
+    const response = await server.inject({
+      method: 'POST',
+      url: '/api/v1/onboarding/client',
+      payload: {
+        name: 'Forged User',
+        phone: '+51987654321',
+        districtId: '550e8400-e29b-41d4-a716-446655440000',
+        authSubject: 'forged-body-subject',
+      },
+    });
+
+    expect(response.statusCode).toBe(401);
+    expect(response.json()).toMatchObject({ code: 'AUTHENTICATION_REQUIRED' });
+    expect(response.body).not.toContain('forged-body-subject');
+  });
+
   it('keeps Prisma npm scripts free of URL and credential literals', () => {
     const packageJson = JSON.parse(
       readFileSync(resolve(__dirname, '../package.json'), 'utf8'),

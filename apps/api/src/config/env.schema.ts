@@ -19,6 +19,9 @@ export interface Environment {
   HOST: string;
   LOG_LEVEL: LogLevel;
   DATABASE_URL?: string;
+  AUTH_ISSUER_URL?: string;
+  AUTH_JWKS_URL?: string;
+  AUTH_AUDIENCE?: string;
 }
 
 export const envSchema = Joi.object<Environment>({
@@ -33,6 +36,13 @@ export const envSchema = Joi.object<Environment>({
   DATABASE_URL: Joi.string().uri({
     scheme: ['postgres', 'postgresql'],
   }),
+  AUTH_ISSUER_URL: Joi.string()
+    .uri({ scheme: ['http', 'https'] })
+    .empty(''),
+  AUTH_JWKS_URL: Joi.string()
+    .uri({ scheme: ['http', 'https'] })
+    .empty(''),
+  AUTH_AUDIENCE: Joi.string().trim().min(1).empty(''),
 }).unknown(true);
 
 export function validateEnvironment(

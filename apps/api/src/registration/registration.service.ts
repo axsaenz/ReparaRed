@@ -39,12 +39,17 @@ export class RegistrationService {
     @Inject(IDENTITY_PORT) private readonly identityPort: IdentityPort,
   ) {}
 
-  async onboard(raw: unknown): Promise<{
+  async onboard(
+    raw: unknown,
+    principal?: TrustedIdentity,
+  ): Promise<{
     status: 200 | 201;
     body: ClientOnboardingResponseDto;
   }> {
     const input = parseOnboardRequest(raw);
-    const identity = await this.readIdentity();
+    const identity = principal
+      ? this.validateIdentity(principal)
+      : await this.readIdentity();
     const email = normalizeEmail(identity.email);
     const bySubject = await this.prisma.user.findUnique({
       where: { authSubject: identity.authSubject },
@@ -136,10 +141,15 @@ export class RegistrationService {
       throw new UnauthorizedException();
     }
 
+    return this.validateIdentity(identity);
+  }
+
+  private validateIdentity(identity: TrustedIdentity): TrustedIdentity {
     if (
       !identity ||
       typeof identity.authSubject !== 'string' ||
       identity.authSubject.length === 0 ||
+      /[\u0000-\u001f\u007f]/.test(identity.authSubject) ||
       typeof identity.email !== 'string' ||
       identity.email.length === 0 ||
       identity.emailVerified !== true ||
